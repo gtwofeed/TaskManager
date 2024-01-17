@@ -8,11 +8,14 @@ namespace TaskManager.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         readonly ApplicationContext db;
 
-        public UserController(ApplicationContext db) => this.db = db;
+        public UsersController(ApplicationContext db) => this.db = db;
+
+        [HttpGet("test")]
+        public IActionResult CreateUser() => Ok("Api = OK!");
 
         [HttpPost("create")]
         public IActionResult CreateUser([FromBody] UserDTO userDTO)
@@ -33,9 +36,10 @@ namespace TaskManager.Api.Controllers
                 };
                 db.Users.Add(user);
                 db.SaveChanges();
-                return Ok();
+                return Ok(user.Id);
             }
             return BadRequest();
         }
     }
+
 }

@@ -8,7 +8,7 @@ namespace TaskManager.Api.Models
         public required string Email { get; set; }
         public required string Password { get; set; }
         public UserStatus Status { get; set; }
-        public required DateTime RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; } = DateTime.Now;
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Phone { get; set; }
