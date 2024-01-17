@@ -1,6 +1,8 @@
-﻿namespace TaskManager.Api.Models
+﻿using TaskManager.Common.Models;
+
+namespace TaskManager.Api.Models
 {
-    public class Task : CommpnModel
+    public class Task : CommonModel
     {
         public required Desk Desk { get; set; }
         public required string Colum { get; set; }

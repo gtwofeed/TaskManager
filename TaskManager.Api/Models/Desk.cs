@@ -1,6 +1,8 @@
-﻿namespace TaskManager.Api.Models
+﻿using TaskManager.Common.Models;
+
+namespace TaskManager.Api.Models
 {
-    public class Desk : CommpnModel
+    public class Desk : CommonModel
     {
         public bool IsPrivate { get; set; }
         public required string Colum { get; set; }

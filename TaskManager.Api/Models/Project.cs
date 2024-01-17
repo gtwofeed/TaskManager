@@ -1,6 +1,8 @@
-﻿namespace TaskManager.Api.Models
+﻿using TaskManager.Common.Models;
+
+namespace TaskManager.Api.Models
 {
-    public class Project : CommpnModel
+    public class Project : CommonModel
     {
         public int? AdminId { get; set; }
         public User? Admin {  get; set; }
