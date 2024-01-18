@@ -12,7 +12,8 @@ namespace TaskManager.Api.Controllers
     {
         readonly ApplicationContext db;
 
-        public UsersController(ApplicationContext db) => this.db = db;
+        public UsersController(ApplicationContext db) => 
+            this.db = db;
 
         [HttpGet("test")]
         public IActionResult CreateUser() => Ok("Api = OK!");
@@ -46,11 +47,11 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPatch("update/{id}")]
-        public IActionResult UpdateUser(int id, UserDTO userDTO)
+        public IActionResult UpdateUser(int id, [FromBody] UserDTO userDTO)
         {
             if (userDTO != null)
             {
-                User user = db.Users.FirstOrDefault(u => u.Id == id);
+                User? user = db.Users.FirstOrDefault(u => u.Id == id);
                 if (user != null)
                 {
                     user.Email = userDTO.Email;
