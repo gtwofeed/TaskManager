@@ -17,10 +17,10 @@ namespace TaskManager.Api.Controllers
         readonly ApplicationContext db;
         readonly UserServices userServices;
 
-        public AccountController(ApplicationContext db, UserServices userServices)
+        public AccountController(ApplicationContext db)
         {
-            this.userServices = userServices;
             this.db = db;
+            userServices = new(db);
         }
 
         [HttpGet("test")]
