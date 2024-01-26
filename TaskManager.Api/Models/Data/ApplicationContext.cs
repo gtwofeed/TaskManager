@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaskManager.Api.Models;
 using TaskManager.Common.Models;
+using Task = TaskManager.Api.Models.Task;
 
-namespace TaskManager.Api.Models
+namespace TaskManager.Api
 {
     public class ApplicationContext : DbContext
     {
@@ -10,7 +12,7 @@ namespace TaskManager.Api.Models
         public DbSet<Desk> Desks { get; set; } = null!;
         public DbSet<Task> Tasks { get; set; } = null!;
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) 
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             //Database.EnsureDeleted();
             Database.EnsureCreated();

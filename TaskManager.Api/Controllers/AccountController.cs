@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using TaskManager.Api.Models;
-using TaskManager.Api.Services;
+using TaskManager.Api.Models.Services;
 using TaskManager.Common.Models;
 
 namespace TaskManager.Api.Controllers
@@ -15,7 +15,7 @@ namespace TaskManager.Api.Controllers
     public class AccountController : ControllerBase
     {
         readonly ApplicationContext db;
-        readonly UserServices userServices;
+        readonly UserService userServices;
 
         public AccountController(ApplicationContext db)
         {
