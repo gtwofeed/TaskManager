@@ -15,7 +15,7 @@ namespace TaskManager.Api.Controllers
     public class AccountController : ControllerBase
     {
         readonly ApplicationContext db;
-        readonly UserService userServices;
+        readonly UsersService userServices;
 
         public AccountController(ApplicationContext db)
         {
@@ -24,7 +24,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("test")]
-        public IActionResult Test() =>
+        public IActionResult CreateUser() =>
             Ok("AccountController = OK!");
 
         [Authorize]

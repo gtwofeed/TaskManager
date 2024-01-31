@@ -5,11 +5,11 @@ using TaskManager.Common.Models;
 
 namespace TaskManager.Api.Models.Services
 {
-    public class UserService : ICommonService<UserDTO>
+    public class UsersService : ICommonService<UserDTO>
     {
         readonly ApplicationContext db;
 
-        public UserService(ApplicationContext db) =>
+        public UsersService(ApplicationContext db) =>
             this.db = db;
 
         public (string, string) GetUserLoginPassFromBasicAuth(HttpRequest request)
@@ -49,31 +49,24 @@ namespace TaskManager.Api.Models.Services
             // если пользователя не найдено
             return null;
         }
+
         public User? GetUser(string login, string password) =>
             db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
+        public User? GetUser(string login) =>
+            db.Users.FirstOrDefault(u => u.Email == login);
+
         public IQueryable<UserDTO> GetAllUsers() =>
             db.Users.Select(u => u.ToDTO());
 
         #region CRUD ICommonService
-        public bool Сreate(UserDTO userDTO, out int id)
+        public bool Сreate(UserDTO dto, out int id)
         {
             id = 0;
-            if (userDTO is null) return false;
+            if (dto is null) return false;
 
             return InvokeExtensions.ToDo(() =>
             {
-                User user = new()
-                {
-                    Email = userDTO.Email,
-                    Password = userDTO.Password,
-                    Status = userDTO.Status,
-                    RegistrationDate = userDTO.RegistrationDate,
-                    Phone = userDTO.Phone,
-                    Photo = userDTO.Photo,
-                    FirstName = userDTO.FirstName,
-                    LastName = userDTO.LastName,
-                    LastLoginDate = userDTO.LastLoginDate,
-                };
+                User user = new(dto);
                 db.Users.Add(user);
                 db.SaveChanges();
 
@@ -82,43 +75,37 @@ namespace TaskManager.Api.Models.Services
         }
         public UserDTO? Get(int id) =>
             db.Users.FirstOrDefault(u => u.Id == id)?.ToDTO();
-        public bool Update(UserDTO userDTO, int id)
+        public bool Update(UserDTO dto, int id)
         {
-            if (userDTO != null)
-            {
-                User? user = db.Users.FirstOrDefault(u => u.Id == id);
-                if (user != null)
-                {
-                    return InvokeExtensions.ToDo(() =>
-                    {
-                        user.Email = userDTO.Email;
-                        user.Password = userDTO.Password;
-                        user.Status = userDTO.Status;
-                        user.FirstName = userDTO.FirstName;
-                        user.LastName = userDTO.LastName;
-                        user.Phone = userDTO.Phone;
-                        user.Photo = userDTO.Photo;
+            if (dto is null) return false;
 
-                        db.Users.Update(user);
-                        db.SaveChanges();
-                    });
-                }
-                return false;
-            }
-            return false;
+            User? user = db.Users.FirstOrDefault(u => u.Id == id);
+            if (user is null) return false;
+
+            return InvokeExtensions.ToDo(() =>
+            {
+                user.Email = dto.Email;
+                user.Password = dto.Password;
+                user.Status = dto.Status;
+                user.FirstName = dto.FirstName;
+                user.LastName = dto.LastName;
+                user.Phone = dto.Phone;
+                user.Photo = dto.Photo;
+
+                db.Users.Update(user);
+                db.SaveChanges();
+            });
         }
         public bool Delete(int id)
         {
             User? user = db.Users.FirstOrDefault(u => u.Id == id);
-            if (user != null)
+            if (user is null) return false;
+
+            return InvokeExtensions.ToDo(() =>
             {
-                return InvokeExtensions.ToDo(() =>
-                {
-                    db.Users.Remove(user);
-                    db.SaveChanges();
-                });
-            }
-            return false;
+                db.Users.Remove(user);
+                db.SaveChanges();
+            });
         }
         #endregion
     }

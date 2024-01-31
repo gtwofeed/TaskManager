@@ -1,4 +1,6 @@
-﻿namespace TaskManager.Common.Models
+﻿using TaskManager.Common.Models.Abstractions;
+
+namespace TaskManager.Common.Models
 {
     public class TaskDTO : CommonDTO
     {

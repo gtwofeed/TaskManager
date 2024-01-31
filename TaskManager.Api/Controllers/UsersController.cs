@@ -14,10 +14,10 @@ namespace TaskManager.Api.Controllers
     [Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
-        readonly UserService userServices;
+        readonly UsersService usersServices;
 
         public UsersController(ApplicationContext db) =>
-            userServices = new(db);
+            usersServices = new(db);
 
         [AllowAnonymous]
         [HttpGet("test")]
@@ -26,33 +26,33 @@ namespace TaskManager.Api.Controllers
 
         [HttpGet("all")]
         public IQueryable<UserDTO> GetUsers() =>
-            userServices.GetAllUsers();
+            usersServices.GetAllUsers();
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] UserDTO userDTO)
+        public IActionResult Create([FromBody] UserDTO dto)
         {
-            bool result = userServices.Сreate(userDTO, out int id); 
+            bool result = usersServices.Сreate(dto, out int id); 
             return result ? Ok(id) : BadRequest();
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var user = userServices.Get(id);
+            var user = usersServices.Get(id);
             return user != null ? Ok(user) : NoContent();
         }
 
         [HttpPatch("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] UserDTO userDTO)
+        public IActionResult Update(int id, [FromBody] UserDTO dto)
         {
-            bool result = userServices.Update(userDTO, id);
+            bool result = usersServices.Update(dto, id);
             return result ? Ok() : NotFound();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public IActionResult Delete(int id)
         {
-            bool result = userServices.Delete(id);
+            bool result = usersServices.Delete(id);
             return result ? Ok() : NotFound();
         }
     }

@@ -5,8 +5,8 @@ namespace TaskManager.Api.Models
     public class User
     {
         public int Id { get; set; }
-        public required string Email { get; set; }
-        public required string Password { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
         public UserStatus Status { get; set; }
         public DateTime RegistrationDate { get; set; } = DateTime.Now;
         public string? FirstName { get; set; }
@@ -19,6 +19,16 @@ namespace TaskManager.Api.Models
         public List<Desk> Desks { get; set; } = [];
 
         public User() { }
+        public User(UserDTO userDTO)
+        {
+            Email = userDTO.Email;
+            Password = userDTO.Password;
+            Status = userDTO.Status;
+            Phone = userDTO.Phone;
+            Photo = userDTO.Photo;
+            FirstName = userDTO.FirstName;
+            LastName = userDTO.LastName;
+        }
 
         public UserDTO ToDTO() =>
             new()
