@@ -9,6 +9,8 @@ namespace TaskManager.Api.Models.Services
         public ProjectsService(ApplicationContext db) =>
             this.db = db;
 
+        public IQueryable<ProjectDTO> GetAllProjects() =>
+            db.Projects.Select(p => p.ToDTO());
 
         #region CRUD ICommonService
         public bool Сreate(ProjectDTO dto, out int id)
