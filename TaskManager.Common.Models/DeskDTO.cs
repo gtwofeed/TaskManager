@@ -10,8 +10,8 @@ namespace TaskManager.Common.Models
     {
         public bool IsPrivate { get; set; }
         public string[] Colums { get; set; } = [];
-        public required UserDTO Admin { get; set; }
-        public required ProjectDTO Project { get; set; }
+        public UserDTO Admin { get; set; } = null!;
+        public ProjectDTO Project { get; set; } = null!;
         public List<TaskDTO> Tasks { get; set; } = [];
     }
 }

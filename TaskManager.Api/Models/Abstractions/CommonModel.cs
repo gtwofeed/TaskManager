@@ -6,7 +6,13 @@
         public required string Name { get; set; }
         public string? Description { get; set; }
         public DateTime CreatedDate { get; set; }
-        public byte[]? File { get; set; }
+        public byte[]? Photo { get; set; }
         public CommonModel() => CreatedDate = DateTime.Now;
+        public CommonModel(CommonDTO dto)
+        {
+            Name = dto.Name;
+            Description = dto.Description;
+            Photo = dto.Photo;
+        }
     }
 }

@@ -9,5 +9,11 @@ namespace TaskManager.Api.Models
         public List<User> Users { get; set; } = [];
         public List<Desk> Desks { get; set; } = [];
         public ProjectStatus Status { get; set; }
+        public Project() { }
+        public Project(ProjectDTO dto) : base(dto)
+        {
+            Status = dto.Status;
+            AdminId = dto.AdminId;
+        }
     }
 }

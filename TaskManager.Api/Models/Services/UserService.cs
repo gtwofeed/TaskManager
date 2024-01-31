@@ -58,28 +58,27 @@ namespace TaskManager.Api.Models.Services
         public bool Сreate(UserDTO userDTO, out int id)
         {
             id = 0;
-            if (userDTO != null)
+            if (userDTO is null) return false;
+
+            return InvokeExtensions.ToDo(() =>
             {
-                return InvokeExtensions.ToDo(() =>
+                User user = new()
                 {
-                    User user = new()
-                    {
-                        Email = userDTO.Email,
-                        Password = userDTO.Password,
-                        Status = userDTO.Status,
-                        RegistrationDate = userDTO.RegistrationDate,
-                        Phone = userDTO.Phone,
-                        Photo = userDTO.Photo,
-                        FirstName = userDTO.FirstName,
-                        LastName = userDTO.LastName,
-                        LastLoginDate = userDTO.LastLoginDate,
-                    };
-                    db.Users.Add(user);
-                    db.SaveChanges();
-                    return user.Id;
-                }, ref id);
-            }
-            return false;
+                    Email = userDTO.Email,
+                    Password = userDTO.Password,
+                    Status = userDTO.Status,
+                    RegistrationDate = userDTO.RegistrationDate,
+                    Phone = userDTO.Phone,
+                    Photo = userDTO.Photo,
+                    FirstName = userDTO.FirstName,
+                    LastName = userDTO.LastName,
+                    LastLoginDate = userDTO.LastLoginDate,
+                };
+                db.Users.Add(user);
+                db.SaveChanges();
+
+                return user.Id;
+            }, ref id);
         }
         public UserDTO? Get(int id) =>
             db.Users.FirstOrDefault(u => u.Id == id)?.ToDTO();
