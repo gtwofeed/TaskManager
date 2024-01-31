@@ -59,7 +59,7 @@ namespace TaskManager.Api.Models.Services
             id = 0;
             if (userDTO != null)
             {
-                return ToDo(() =>
+                return InvokeExtensions.ToDo(() =>
                 {
                     User user = new()
                     {
@@ -87,7 +87,7 @@ namespace TaskManager.Api.Models.Services
                 User? user = db.Users.FirstOrDefault(u => u.Id == id);
                 if (user != null)
                 {
-                    return ToDo(() =>
+                    return InvokeExtensions.ToDo(() =>
                     {
                         user.Email = userDTO.Email;
                         user.Password = userDTO.Password;
@@ -110,32 +110,13 @@ namespace TaskManager.Api.Models.Services
             User? user = db.Users.FirstOrDefault(u => u.Id == id);
             if (user != null)
             {
-                return ToDo(() =>
+                return InvokeExtensions.ToDo(() =>
                 {
                     db.Users.Remove(user);
                     db.SaveChanges();
                 });
             }
             return false;
-        }
-
-        bool ToDo(Action action)
-        {
-            try
-            {
-                action.Invoke();
-                return true;
-            }
-            catch { return false; }
-        }
-        bool ToDo(Func<int> func, ref int id)
-        {
-            try
-            {
-                id = func.Invoke();
-                return true;
-            }
-            catch { return false; }
-        }
+        }       
     }
 }
