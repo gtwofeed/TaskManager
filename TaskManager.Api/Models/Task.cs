@@ -4,8 +4,8 @@ namespace TaskManager.Api.Models
 {
     public class Task : CommonModel
     {
-        public required Desk Desk { get; set; }
-        public required string Colum { get; set; }
+        public Desk Desk { get; set; } = null!;
+        public string Colum { get; set; } = null!;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public byte[]? File { get; set; }

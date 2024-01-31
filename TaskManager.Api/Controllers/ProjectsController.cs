@@ -26,12 +26,10 @@ namespace TaskManager.Api.Controllers
         {
             if (dto == null) return BadRequest();
 
-            // !! !!
-            dto.AdminId = usersServices.GetUser(HttpContext.User.Identity.Name)?.Id;
-            if(dto.AdminId == null) return NotFound();
+            dto.Admin = usersServices.GetUser(HttpContext.User.Identity.Name)?.ToDTO();
+            if(dto.Admin == null) return NotFound();
 
-            bool result = projectsServices.Сreate(dto, out int id);
-            return result ? Ok(id) : BadRequest();
+            return projectsServices.Сreate(dto, out int id) ? Ok(id) : BadRequest();
         }
 
         [HttpGet("{id}")]

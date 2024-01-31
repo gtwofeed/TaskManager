@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TaskManager.Common.Models
+﻿namespace TaskManager.Common.Models
 {
     public class UserDTO
     {
         public int Id { get; set; }
-        public required string Email { get; set; }
-        public required string Password { get; set; }
+        public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
         public UserStatus Status { get; set; }
         public DateTime RegistrationDate { get; set; } = DateTime.Now;
         public string? FirstName { get; set; }

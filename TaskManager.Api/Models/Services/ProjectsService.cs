@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text;
-using TaskManager.Common.Models;
+﻿using TaskManager.Common.Models;
 
 namespace TaskManager.Api.Models.Services
 {
@@ -20,7 +18,8 @@ namespace TaskManager.Api.Models.Services
 
             return InvokeExtensions.ToDo(() =>
             {
-                Project project = new(dto);
+                Project project = new(dto) { Admin = GetAdmin(dto) };
+
                 db.Projects.Add(project);
                 db.SaveChanges();
 
@@ -42,25 +41,32 @@ namespace TaskManager.Api.Models.Services
             {
                 project.Name = dto.Name;
                 project.Description = dto.Description;
+                project.Photo = dto.Photo;
                 project.Status = dto.Status;
-                project.AdminId = project.AdminId;
-                project.Admin = null;
+                project.Admin = GetAdmin(dto);
 
                 db.Projects.Update(project);
                 db.SaveChanges();
             });
         }
+
         public bool Delete(int id)
         {
-            User? user = db.Users.FirstOrDefault(u => u.Id == id);
-            if (user is null) return false;
+            Project? project = db.Projects.FirstOrDefault(p => p.Id == id);
+            if (project is null) return false;
 
             return InvokeExtensions.ToDo(() =>
             {
-                db.Users.Remove(user);
+                db.Projects.Remove(project);
                 db.SaveChanges();
             });
         }
         #endregion
+
+        User? GetAdmin(ProjectDTO dto)
+        {
+            if (dto.Admin is null) return null;
+            return db.Users.FirstOrDefault(u => u.Id == dto.Admin.Id);
+        }
     }
 }
