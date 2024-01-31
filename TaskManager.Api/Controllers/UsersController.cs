@@ -35,6 +35,13 @@ namespace TaskManager.Api.Controllers
             return result ? Ok(id) : BadRequest();
         }
 
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var user = userServices.Get(id);
+            return user != null ? Ok(user) : NoContent();
+        }
+
         [HttpPatch("{id}")]
         public IActionResult UpdateUser(int id, [FromBody] UserDTO userDTO)
         {

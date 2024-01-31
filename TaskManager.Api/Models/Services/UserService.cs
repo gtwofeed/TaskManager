@@ -27,11 +27,6 @@ namespace TaskManager.Api.Models.Services
             }
             return (username, password);
         }
-
-        public User? GetUser(string login, string password) =>
-            db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
-        public IQueryable<UserDTO> GetAllUsers() =>
-            db.Users.Select(u => u.ToDTO());
         public ClaimsIdentity? GetIdentity(string username, string password)
         {
             User? currentUser = GetUser(username, password);
@@ -54,6 +49,12 @@ namespace TaskManager.Api.Models.Services
             // если пользователя не найдено
             return null;
         }
+        public User? GetUser(string login, string password) =>
+            db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
+        public IQueryable<UserDTO> GetAllUsers() =>
+            db.Users.Select(u => u.ToDTO());
+
+        #region CRUD ICommonService
         public bool Сreate(UserDTO userDTO, out int id)
         {
             id = 0;
@@ -80,6 +81,8 @@ namespace TaskManager.Api.Models.Services
             }
             return false;
         }
+        public UserDTO? Get(int id) =>
+            db.Users.FirstOrDefault(u => u.Id == id)?.ToDTO();
         public bool Update(UserDTO userDTO, int id)
         {
             if (userDTO != null)
@@ -117,6 +120,7 @@ namespace TaskManager.Api.Models.Services
                 });
             }
             return false;
-        }       
+        }
+        #endregion
     }
 }

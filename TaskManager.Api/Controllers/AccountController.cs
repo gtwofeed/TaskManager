@@ -24,7 +24,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("test")]
-        public IActionResult CreateUser() =>
+        public IActionResult Test() =>
             Ok("AccountController = OK!");
 
         [Authorize]
