@@ -108,5 +108,14 @@ namespace TaskManager.Api.Models.Services
             });
         }
         #endregion
+
+
+        public IEnumerable<UserDTO> GetByIds(int[] userIds)
+        {
+            foreach (int userId in userIds)
+            {
+                yield return db.Users.Find(userId)?.ToDTO();
+            }
+        }
     }
 }

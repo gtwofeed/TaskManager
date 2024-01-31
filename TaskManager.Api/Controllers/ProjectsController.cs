@@ -21,9 +21,19 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("all")]
-        [Authorize(Roles = "Admin")]
-        public IQueryable<ProjectDTO> GetProjects() =>
-            projectsServices.GetAllProjects();
+        public IQueryable<ProjectDTO>? GetProjects()
+        {
+            var user = usersServices.GetUser(HttpContext.User.Identity.Name);
+            if (user != null)
+            {
+                if (user.Status == UserStatus.Admin)
+                {
+                    return projectsServices.GetAllProjects();
+                }
+                return projectsServices.GetByUserId(user.Id);
+            }
+            return null;
+        }
 
         [HttpPost]
         public IActionResult Create([FromBody] ProjectDTO dto)
@@ -46,6 +56,7 @@ namespace TaskManager.Api.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
+            var user = usersServices.GetUser(HttpContext.User.Identity.Name);
             var project = projectsServices.Get(id);
             return project != null ? Ok(project) : NoContent();
         }
@@ -69,6 +80,25 @@ namespace TaskManager.Api.Controllers
         {
             bool result = projectsServices.Delete(id);
             return result ? Ok() : NotFound();
+        }
+
+        [HttpPatch("{id}/users")]
+        public IActionResult AddUsersToProject(int id, [FromBody] int[] userIds)
+        {
+            if(userIds == null) return BadRequest();
+
+            UserDTO? admin = usersServices.GetUser(HttpContext.User.Identity.Name)?.ToDTO();
+            if (admin != null)
+            {
+                if (admin.Status == UserStatus.Admin || admin.Status == UserStatus.Editor) 
+                {
+                    var project = projectsServices.Get(id);
+                    if (project is null) return NotFound();
+                    var usersForAdd = usersServices.GetByIds(userIds);
+                    project.Users.AddRange(usersForAdd);
+                }
+            }
+            return Unauthorized();
         }
     }
 }

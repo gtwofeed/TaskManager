@@ -11,6 +11,10 @@ namespace TaskManager.Api.Models.Services
 
         public IQueryable<ProjectDTO> GetAllProjects() =>
             db.Projects.Select(p => p.ToDTO());
+        public IQueryable<ProjectDTO> GetByUserId(int userId) =>
+            from p in db.Projects
+            where (p.Admin != null && p.Admin.Id == userId) || (p.Users.Any(u => u.Id == userId))
+            select p.ToDTO();
 
         #region CRUD ICommonService
         public bool Сreate(ProjectDTO dto, out int id)
