@@ -12,10 +12,12 @@ namespace TaskManager.Api.Models.Services
 
         public IQueryable<ProjectDTO> GetAllProjects() =>
             db.Projects.Select(p => p.ToDTO());
-        public IQueryable<ProjectDTO> GetByUserId(int userId) =>
-            from p in db.Projects
-            where (p.Admin != null && p.Admin.Id == userId) || (p.Users.Any(u => u.Id == userId))
-            select p.ToDTO();
+
+        public IQueryable<ProjectDTO> GetForAdminById(int adminId) =>
+            db.Projects.Where(p => p.Admin != null && p.Admin.Id == adminId).Select(p => p.ToDTO());
+
+        public IQueryable<ProjectDTO> GetForUserById(int userId) =>
+            db.Projects.Include(p => p.Users).Where(p => p.Users.Any(u => u.Id == userId)).Select(p => p.ToDTO());
 
         public void AddUsersByIds(int projectId, int[] userIds)
         {

@@ -20,7 +20,7 @@ namespace TaskManager.Api.Controllers
             projectsServices = new ProjectsService(db);
         }
 
-        [HttpGet("all")]
+        [HttpGet]
         public IQueryable<ProjectDTO>? GetProjects()
         {
             var user = usersServices.GetUser(HttpContext.User.Identity.Name);
@@ -30,7 +30,7 @@ namespace TaskManager.Api.Controllers
                 {
                     return projectsServices.GetAllProjects();
                 }
-                return projectsServices.GetByUserId(user.Id);
+                return projectsServices.GetForAdminById(user.Id).Union(projectsServices.GetForUserById(user.Id));
             }
             return null;
         }

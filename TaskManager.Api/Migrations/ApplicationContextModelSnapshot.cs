@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
+using TaskManager.Api;
 
 #nullable disable
 
@@ -48,7 +48,7 @@ namespace TaskManager.Api.Migrations
                     b.Property<int>("AdminId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Colum")
+                    b.Property<string>("Colums")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -58,15 +58,15 @@ namespace TaskManager.Api.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("File")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Photo")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
@@ -97,12 +97,12 @@ namespace TaskManager.Api.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("File")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Photo")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -150,6 +150,9 @@ namespace TaskManager.Api.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Photo")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -210,6 +213,16 @@ namespace TaskManager.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "fistadmin",
+                            Password = "admin",
+                            RegistrationDate = new DateTime(2024, 2, 1, 21, 31, 16, 774, DateTimeKind.Local).AddTicks(6304),
+                            Status = 2
+                        });
                 });
 
             modelBuilder.Entity("ProjectUser", b =>

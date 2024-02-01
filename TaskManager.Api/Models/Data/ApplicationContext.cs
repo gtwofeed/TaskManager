@@ -14,22 +14,19 @@ namespace TaskManager.Api
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-            //Database.EnsureDeleted();
-            Database.EnsureCreated();
-            if (Users.Any(u => u.Status == UserStatus.Admin) == false)
-            {
-                User user = new()
-                {
-                    Email = "fistadmin",
-                    Password = "admin",
-                    Status = UserStatus.Admin,
-                };
-                Users.Add(user);
-                SaveChanges();
-            }
+            Database.Migrate();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // добовляем админа по умолчанию
+            modelBuilder.Entity<User>().HasData(new User()
+            {
+                Id = 1,
+                Email = "fistadmin",
+                Password = "admin",
+                Status = UserStatus.Admin,
+            });
+
             modelBuilder.Entity<Project>()
                 .HasOne(p => p.Admin)
                 .WithMany()
@@ -44,6 +41,8 @@ namespace TaskManager.Api
                 .HasOne(t => t.Executor)
                 .WithMany()
                 .HasForeignKey("ExecutorId");
+
+            
         }
     }
 }
