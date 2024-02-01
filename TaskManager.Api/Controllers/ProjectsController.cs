@@ -82,7 +82,7 @@ namespace TaskManager.Api.Controllers
             return result ? Ok() : NotFound();
         }
 
-        [HttpPatch("{id}/users")]
+        [HttpPatch("{id}/users/add")]
         public IActionResult AddUsersToProject(int id, [FromBody] int[] userIds)
         {
             if(userIds == null) return BadRequest();
@@ -90,12 +90,27 @@ namespace TaskManager.Api.Controllers
             UserDTO? admin = usersServices.GetUser(HttpContext.User.Identity.Name)?.ToDTO();
             if (admin != null)
             {
-                if (admin.Status == UserStatus.Admin || admin.Status == UserStatus.Editor) 
+                if (admin.Status == UserStatus.Admin || admin.Status == UserStatus.Editor)
                 {
-                    var project = projectsServices.Get(id);
-                    if (project is null) return NotFound();
-                    var usersForAdd = usersServices.GetByIds(userIds);
-                    project.Users.AddRange(usersForAdd);
+                    projectsServices.AddUsersByIds(id, userIds);
+                    return Ok();
+                }
+            }
+            return Unauthorized();            
+        }
+
+        [HttpPatch("{id}/users/del")]
+        public IActionResult DelUsersToProject(int id, [FromBody] int[] userIds)
+        {
+            if (userIds == null) return BadRequest();
+
+            UserDTO? admin = usersServices.GetUser(HttpContext.User.Identity.Name)?.ToDTO();
+            if (admin != null)
+            {
+                if (admin.Status == UserStatus.Admin || admin.Status == UserStatus.Editor)
+                {
+                    projectsServices.DelUsersByIds(id, userIds);
+                    return Ok();
                 }
             }
             return Unauthorized();

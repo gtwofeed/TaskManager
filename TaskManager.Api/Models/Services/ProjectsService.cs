@@ -1,4 +1,5 @@
-﻿using TaskManager.Common.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskManager.Common.Models;
 
 namespace TaskManager.Api.Models.Services
 {
@@ -15,6 +16,43 @@ namespace TaskManager.Api.Models.Services
             from p in db.Projects
             where (p.Admin != null && p.Admin.Id == userId) || (p.Users.Any(u => u.Id == userId))
             select p.ToDTO();
+
+        public void AddUsersByIds(int projectId, int[] userIds)
+        {
+            Project? project = db.Projects.Find(projectId);
+            if (project != null)
+            {
+                foreach (int userId in userIds)
+                {
+                    User? user = db.Users.Find(userId);
+                    if (user != null)
+                    {
+                        project.Users.Add(user);
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
+
+        public void DelUsersByIds(int projectId, int[] userIds)
+        {
+            Project? project = db.Projects.Include(p => p.Users).FirstOrDefault(p => p.Id == projectId);
+            if (project != null)
+            {
+                foreach (int userId in userIds)
+                {
+                    User? user = db.Users.Find(userId);
+                    if (user != null)
+                    {
+                        if (project.Users.Contains(user))
+                        {
+                            project.Users.Remove(user);
+                        }
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
 
         #region CRUD ICommonService
         public bool Сreate(ProjectDTO dto, out int id)
@@ -74,5 +112,6 @@ namespace TaskManager.Api.Models.Services
             if (dto.Admin is null) return null;
             return db.Users.FirstOrDefault(u => u.Id == dto.Admin.Id);
         }
+
     }
 }
