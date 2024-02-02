@@ -20,9 +20,9 @@ namespace TaskManager.Api.Controllers
             usersServices = new(db);
 
         [AllowAnonymous]
-        [HttpGet("test")]
-        public IActionResult Test() =>
-            Ok("Test - ok");
+        [HttpGet("check-status")]
+        public IActionResult CheckStatus() =>
+            Ok($"Active");
 
         [HttpGet("all")]
         public IQueryable<UserDTO> GetUsers() =>
