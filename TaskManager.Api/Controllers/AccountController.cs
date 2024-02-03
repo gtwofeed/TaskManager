@@ -14,12 +14,10 @@ namespace TaskManager.Api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        readonly ApplicationContext db;
         readonly UsersService userServices;
 
         public AccountController(ApplicationContext db)
         {
-            this.db = db;
             userServices = new(db);
         }
 
