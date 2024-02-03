@@ -15,6 +15,13 @@ namespace TaskManager.Api.Controllers
 
         public UsersController(ApplicationContext db) =>
             usersServices = new(db);
+        
+        [HttpPost]
+        public IActionResult Create([FromBody] UserDTO dto)
+        {
+            bool result = usersServices.Сreate(dto, out int id); 
+            return result ? Ok(id) : BadRequest();
+        }
 
         [AllowAnonymous]
         [HttpGet("check-status")]
@@ -24,13 +31,7 @@ namespace TaskManager.Api.Controllers
         [HttpGet("all")]
         public IQueryable<UserDTO> GetUsers() =>
             usersServices.GetAllUsers();
-
-        [HttpPost]
-        public IActionResult Create([FromBody] UserDTO dto)
-        {
-            bool result = usersServices.Сreate(dto, out int id); 
-            return result ? Ok(id) : BadRequest();
-        }
+        
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
