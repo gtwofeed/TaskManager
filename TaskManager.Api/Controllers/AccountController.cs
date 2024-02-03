@@ -23,26 +23,9 @@ namespace TaskManager.Api.Controllers
             userServices = new(db);
         }
 
-        [HttpGet("test")]
-        public IActionResult CreateUser() =>
-            Ok("AccountController = OK!");
-
-        [Authorize]
-        [HttpGet("info")]
-        public IActionResult GetCurrentUserInfo()
-        {
-            string username = HttpContext.User.Identity.Name;
-            if(username != null)
-            {
-                User? user = db.Users.FirstOrDefault(u => u.Email == username);
-                if(user != null)
-                {
-                    return Ok(user.Id);
-                }
-                return NotFound();
-            }
-            return BadRequest("Context Not Found");
-        }
+        [HttpGet("check")]
+        public IActionResult Chech() =>
+            Ok("OK!");
 
         [HttpPost("token")]
         public IActionResult GetToken()
@@ -74,28 +57,20 @@ namespace TaskManager.Api.Controllers
         }
 
         [Authorize]
-        [HttpPatch("update")]
-        public IActionResult UpdateUser([FromBody] UserDTO userDTO)
+        [HttpGet("info")]
+        public IActionResult GetCurrentUserInfo()
         {
-            if (userDTO != null)
+            string username = HttpContext.User.Identity.Name;
+            if (username != null)
             {
-                string usetname = HttpContext.User.Identity.Name;
-                User? user = db.Users.FirstOrDefault(u => u.Email == usetname);
+                User? user = db.Users.FirstOrDefault(u => u.Email == username);
                 if (user != null)
                 {
-                    user.Password = userDTO.Password;
-                    user.FirstName = userDTO.FirstName;
-                    user.LastName = userDTO.LastName;
-                    user.Phone = userDTO.Phone;
-                    user.Photo = userDTO.Photo;
-
-                    db.Users.Update(user);
-                    db.SaveChanges();
-                    return Ok();
+                    return Ok(user.Id);
                 }
                 return NotFound();
             }
-            return BadRequest();
+            return BadRequest("Context Not Found");
         }
     }
 }
