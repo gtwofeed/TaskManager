@@ -61,7 +61,7 @@ namespace TaskManager.Api.Controllers
             string username = HttpContext.User.Identity.Name;
             if (username != null)
             {
-                User? user = db.Users.FirstOrDefault(u => u.Email == username);
+                User? user = userServices.GetUser(username);
                 if (user != null)
                 {
                     return Ok(user.Id);

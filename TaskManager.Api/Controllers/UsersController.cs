@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Numerics;
-using TaskManager.Api.Models;
 using TaskManager.Api.Models.Services;
 using TaskManager.Common.Models;
 
