@@ -3,7 +3,7 @@ using System.Text;
 using TaskManager.Api.Models;
 using TaskManager.Common.Models;
 
-namespace TaskManager.Api.Models.Services
+namespace TaskManager.Api.Services
 {
     public class UsersService : ICommonService<UserDTO>
     {
@@ -19,8 +19,8 @@ namespace TaskManager.Api.Models.Services
             string authHeader = request.Headers.Authorization.ToString();
             if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Basic"))
             {
-                string encodedUserNamePass = authHeader.Replace("Basic", "");
                 Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+                string encodedUserNamePass = authHeader.Replace("Basic", "");
 
                 string[] usernamePassArry = encoding.GetString(Convert.FromBase64String(encodedUserNamePass)).ToString().Split(':');
                 (username, password) = (usernamePassArry.First(), usernamePassArry.Last());

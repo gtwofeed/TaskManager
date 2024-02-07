@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using TaskManager.Api.Models;
-using TaskManager.Api.Models.Services;
-using TaskManager.Common.Models;
+using TaskManager.Api.Services;
 
 namespace TaskManager.Api.Controllers
 {

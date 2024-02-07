@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TaskManager.Api.Models.Services;
+using TaskManager.Api.Services;
 using TaskManager.Common.Models;
 
 namespace TaskManager.Api.Controllers

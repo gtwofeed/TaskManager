@@ -10,9 +10,6 @@ namespace TaskManager.Api.Models
         const string KEY = "mysupersecret_secretsecretsecretkey!321";   // ключ для шифрации
         public const int LIFETIME = 1; // время жизни токена - 1 минута
 
-        // из урока
-        /*public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
-            new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));*/
         public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
     }

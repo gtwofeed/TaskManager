@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaskManager.Api.Models;
 using TaskManager.Common.Models;
 
-namespace TaskManager.Api.Models.Services
+namespace TaskManager.Api.Services
 {
     public class ProjectsService : ICommonService<ProjectDTO>
     {
