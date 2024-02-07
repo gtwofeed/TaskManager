@@ -1,9 +1,11 @@
 using Azure.Core;
 using FluentAssertions;
+using FluentAssertions.Common;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using System.Net;
 using System.Reflection.PortableExecutable;
@@ -23,20 +25,22 @@ namespace TaskManager.Api.Tests
 
         public UsersControllerIntegration(WebApplicationFactory<Program> application)
         {
-            application.WithWebHostBuilder(builder =>
+            string connection = "Server=(localdb)\\mssqllocaldb;Database=TaskManagerTestDb;Trusted_Connection=True";
+            var webHost = application.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    var dbContext = services.SingleOrDefault(d =>
-                    d.ServiceType == typeof(DbContextOptions<ApplicationContext>));
-                    services.Remove(dbContext);
+                    services.RemoveAll(typeof(DbContextOptions<ApplicationContext>));
                     services.AddDbContext<ApplicationContext>(option =>
                     {
-                        option.UseInMemoryDatabase("test_db");
+                        option.UseSqlServer(connection);
                     });
                 });
             });
-            client = application.CreateClient();
+
+            client = webHost.CreateClient();
+
+
             adminAuth = "Basic ZmlzdGFkbWluOmFkbWlu";
         }
 
@@ -62,6 +66,7 @@ namespace TaskManager.Api.Tests
         [Fact]
         public async Task Create_SendRequest_ShouldCount1()
         {
+            
 
             // Act
             var request = new HttpRequestMessage(HttpMethod.Post, "api/account/token");
@@ -82,7 +87,6 @@ namespace TaskManager.Api.Tests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var users = JsonSerializer.Deserialize<List<UserDTO>>(await response.Content.ReadAsStringAsync());
-
             users.Should().HaveCount(1);
             // Assert
         }
