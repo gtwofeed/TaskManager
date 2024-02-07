@@ -27,6 +27,9 @@ namespace TaskManager.Api.Tests
             {
                 builder.ConfigureTestServices(services =>
                 {
+                    var dbContext = services.SingleOrDefault(d =>
+                    d.ServiceType == typeof(DbContextOptions<ApplicationContext>));
+                    services.Remove(dbContext);
                     services.AddDbContext<ApplicationContext>(option =>
                     {
                         option.UseInMemoryDatabase("test_db");
@@ -80,7 +83,7 @@ namespace TaskManager.Api.Tests
 
             var users = JsonSerializer.Deserialize<List<UserDTO>>(await response.Content.ReadAsStringAsync());
 
-            users.Should().HaveCount(2);
+            users.Should().HaveCount(1);
             // Assert
         }
     }
