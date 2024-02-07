@@ -18,7 +18,7 @@ namespace TaskManager.Api.Tests
         public AccountControllerIntegration(WebApplicationFactory<Program> application)
         {
             client = application.CreateClient();
-            adminAuth = GetAuth(context, UserStatus.Admin);
+            adminAuth = "Basic ZmlzdGFkbWluOmFkbWlu";
         }
         string GetAuth(ApplicationContext context, UserStatus status)
         {

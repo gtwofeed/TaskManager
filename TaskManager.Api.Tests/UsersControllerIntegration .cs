@@ -1,6 +1,9 @@
 using Azure.Core;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using System.Net;
 using System.Reflection.PortableExecutable;
@@ -20,8 +23,18 @@ namespace TaskManager.Api.Tests
 
         public UsersControllerIntegration(WebApplicationFactory<Program> application)
         {
+            application.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddDbContext<ApplicationContext>(option =>
+                    {
+                        option.UseInMemoryDatabase("test_db");
+                    });
+                });
+            });
             client = application.CreateClient();
-            adminAuth = GetAuth(context, UserStatus.Admin);
+            adminAuth = "Basic ZmlzdGFkbWluOmFkbWlu";
         }
 
         string GetAuth(ApplicationContext context, UserStatus status)
