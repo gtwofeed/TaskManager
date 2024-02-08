@@ -15,7 +15,7 @@ namespace TaskManager.Api.Tests
 {
     /*
      * получаем апи приложение подменяя контекст базы данных на InMemory
-     * по умолчанию пользователь с статусом Admin создаётся контекстом по умолчанию
+     * добовляем пользователя со статусом Admin
      * добовляем пользователя со статусом Editor
      * добовляем пользователя со статусом User
      */
@@ -25,11 +25,11 @@ namespace TaskManager.Api.Tests
         public readonly string adminAuth; // строка бозовой авторизации админа
         public readonly string editorAuth; // строка бозовой авторизации редактора
         public readonly string userAuth; // строка бозовой авторизации пользователя
-
-        public string IncorrectAuth { get; }
+        public readonly string incorrectAuth; // строка бозовой авторизации не существуещего пользователя
 
         public ComonnContext()
         {
+            // заменяем провайдера UseInMemoryDatabase
             var webHost = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
@@ -42,6 +42,7 @@ namespace TaskManager.Api.Tests
                 });
             });
 
+            // заполняем Database тестовыми данными
             ApplicationContext db = webHost.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
 
             List<User> users = [
@@ -70,7 +71,7 @@ namespace TaskManager.Api.Tests
             adminAuth = GetAuth(UserStatus.Admin, db);
             editorAuth = GetAuth(UserStatus.Editor, db);
             userAuth = GetAuth(UserStatus.User, db);
-            IncorrectAuth = GetAuth(UserStatus.User);
+            incorrectAuth = GetAuth(UserStatus.User);
 
             apiClient = webHost.CreateClient();
         }
@@ -86,10 +87,16 @@ namespace TaskManager.Api.Tests
         {
             string username = "";
             string password = "";
-            if (context is null) return $"Basic {Convert.ToBase64String(
-                Encoding.UTF8.GetBytes($"{username}:{password}"))}";
 
-            var user = context.Users.FirstOrDefault(u => u.Status == status) ?? context.Users.FirstOrDefault();
+            if (context != null)
+            {
+                var user = context.Users.FirstOrDefault(u => u.Status == status);
+                if (user != null)
+                {
+                    username = user.Email;
+                    password = user.Password;
+                }
+            }
 
             return $"Basic {Convert.ToBase64String(
                 Encoding.UTF8.GetBytes($"{username}:{password}"))}";

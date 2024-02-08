@@ -1,11 +1,5 @@
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Net;
-using System.Text;
 using TaskManager.Common.Models;
 using Xunit;
 
@@ -14,24 +8,11 @@ namespace TaskManager.Api.Tests
 {
     public class UsersControllerIntegration : ComonnContext
     {
-        bool EqueUsersDTO(UserDTO oldUser, UserDTO modUser)
-        {
-            if (oldUser.Id != modUser.Id) return false;
-            else if (oldUser.Email != modUser.Email) return false;
-            else if (oldUser.Password != modUser.Password) return false;
-            else if (oldUser.Status != modUser.Status) return false;
-            else if (oldUser.RegistrationDate != modUser.RegistrationDate) return false;
-            else if (oldUser.FirstName != modUser.FirstName) return false;
-            else if (oldUser.LastName != modUser.LastName) return false;
-            else if (oldUser.Phone != modUser.Phone) return false;
-            else if (!oldUser.Photo.SequenceEqual(modUser.Photo)) return false;
-            return true;
-        }
 
         [Fact]
         public async Task Check_SendRequest_ShouldOk()
         {
-            // Arrange
+            // Arrange in ComonnContext
 
             // Act
             var response = await apiClient.GetAsync("api/users/check");
@@ -44,7 +25,10 @@ namespace TaskManager.Api.Tests
         public async Task Create_SendRequest_ShouldId4()
         {
             // Arrange
+            UserDTO userDTO = new()
+            {
 
+            };
 
             // Act
 
@@ -97,6 +81,22 @@ namespace TaskManager.Api.Tests
             // Act
 
             // Assert
+        }
+        bool EqueUsersDTO(UserDTO oldUser, UserDTO modUser)
+        {
+            if (oldUser.Id != modUser.Id) return false;
+            else if (oldUser.Email != modUser.Email) return false;
+            else if (oldUser.Password != modUser.Password) return false;
+            else if (oldUser.Status != modUser.Status) return false;
+            else if (oldUser.RegistrationDate != modUser.RegistrationDate) return false;
+            else if (oldUser.FirstName != modUser.FirstName) return false;
+            else if (oldUser.LastName != modUser.LastName) return false;
+            else if (oldUser.Phone != modUser.Phone) return false;
+            else if (oldUser.Photo != null && modUser.Photo == null) return false;
+            else if (oldUser.Photo == null && modUser.Photo != null) return false;
+            else if (oldUser.Photo != null && modUser.Photo != null && !oldUser.Photo.SequenceEqual(modUser.Photo)) return false;
+
+            return true;
         }
     }
 }
