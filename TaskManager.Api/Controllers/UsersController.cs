@@ -49,7 +49,7 @@ namespace TaskManager.Api.Controllers
             return result ? Ok() : NotFound();
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public IQueryable<UserDTO> GetUsers() =>
             usersServices.GetAllUsers();

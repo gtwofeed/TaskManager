@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManager.Api\TaskManager.Api.csproj" />
     <ProjectReference Include="..\TaskManager.Common.Models\TaskManager.Common.Models.csproj" />
   </ItemGroup>
 

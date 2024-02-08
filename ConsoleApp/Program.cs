@@ -4,6 +4,15 @@ using System;
 using System.Net;
 using TaskManager.Common.Models;
 using System.Text;
+using TaskManager.Api;
+using TaskManager.Api.Models;
+using Task = System.Threading.Tasks.Task;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
 
 namespace ConsoleApp
 {
@@ -11,13 +20,13 @@ namespace ConsoleApp
     {
         static async Task Main(string[] args)
         {
-            await Temp2();
+            await Temp();
             
         }
         static async Task Temp()
         {
             var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:49914/api/account/token");
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5000/api/account/token");
             request.Headers.Add("Authorization", "Basic ZmlzdGFkbWluOmFkbWlu");
             var content = new StringContent("", null, "text/plain");
             request.Content = content;
@@ -25,8 +34,8 @@ namespace ConsoleApp
             response.EnsureSuccessStatusCode();
 
             var token = JsonSerializer.Deserialize<Token>(await response.Content.ReadAsStringAsync());
-
-            request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:49914/api/users/all");
+            await Console.Out.WriteLineAsync(token.ToString());
+            request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:5000/api/users/all");
             request.Headers.Add("Authorization", $"Bearer {token}");
             response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -42,8 +51,21 @@ namespace ConsoleApp
             );
             Console.WriteLine(uAuth);
         }
-        static async Task Temp2()
+        static void Temp2()
         {
+
+        }
+        static string GetAuth(UserStatus status, ApplicationContext? context = null)
+        {
+            string username = "";
+            string password = "";
+            if (context is null) return $"Basic {Convert.ToBase64String(
+                Encoding.UTF8.GetBytes($"{username}:{password}"))}";
+
+            var user = context.Users.FirstOrDefault(u => u.Status == status) ?? context.Users.FirstOrDefault();
+
+            return $"Basic {Convert.ToBase64String(
+                Encoding.UTF8.GetBytes($"{username}:{password}"))}";
         }
     }
 }

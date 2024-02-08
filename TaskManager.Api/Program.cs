@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using TaskManager.Api.Models;
+using TaskManager.Common.Models;
 namespace TaskManager.Api
 {
     public class Program
@@ -15,7 +16,8 @@ namespace TaskManager.Api
             string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
             // добавляем контекст ApplicationContext в качестве сервиса в приложение
-            builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            //builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            builder.Services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("test"));
 
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -52,7 +54,32 @@ namespace TaskManager.Api
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-                if(db.Database.IsRelational()) db.Database.Migrate();                
+                if(db.Database.IsRelational()) db.Database.Migrate();
+                /*else
+                {
+                    List<User> users = [
+                        new()
+                        {
+                            Email = "fistadmin",
+                            Password = "admin",
+                            Status = UserStatus.Admin,
+                        },
+                        new()
+                        {
+                            Email = "user",
+                            Password = "User123",
+                            Status = UserStatus.User,
+                        },
+                        new()
+                        {
+                            Email = "editor",
+                            Password = "Editor123",
+                            Status = UserStatus.Editor,
+                        }];
+
+                    db.Users.AddRange(users);
+                    db.SaveChanges();
+                }*/
             }
 
             // Configure the HTTP request pipeline.
