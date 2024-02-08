@@ -28,5 +28,11 @@ namespace TaskManager.Api.Tests
             return $"Basic {Convert.ToBase64String(
                 Encoding.UTF8.GetBytes($"{username}:{password}"))}";
         }
+
+        [Fact]
+        public async Task GetToken_SendRequest_Should_IncorrectLoginPass()
+        {
+
+        }
     }
 }

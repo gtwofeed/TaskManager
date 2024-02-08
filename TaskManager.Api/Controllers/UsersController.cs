@@ -15,6 +15,11 @@ namespace TaskManager.Api.Controllers
 
         public UsersController(ApplicationContext db) =>
             usersServices = new(db);
+
+        [AllowAnonymous]
+        [HttpGet("check")]
+        public IActionResult Check() =>
+            Ok($"Ok");
         
         [HttpPost]
         public IActionResult Create([FromBody] UserDTO dto)
@@ -22,16 +27,6 @@ namespace TaskManager.Api.Controllers
             bool result = usersServices.Сreate(dto, out int id); 
             return result ? Ok(id) : BadRequest();
         }
-
-        [AllowAnonymous]
-        [HttpGet("check-status")]
-        public IActionResult CheckStatus() =>
-            Ok($"Active");
-
-        [HttpGet("all")]
-        public IQueryable<UserDTO> GetUsers() =>
-            usersServices.GetAllUsers();
-        
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
@@ -53,6 +48,12 @@ namespace TaskManager.Api.Controllers
             bool result = usersServices.Delete(id);
             return result ? Ok() : NotFound();
         }
+
+
+        [HttpGet]
+        public IQueryable<UserDTO> GetUsers() =>
+            usersServices.GetAllUsers();
+
     }
 
 }

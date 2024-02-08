@@ -1,16 +1,11 @@
-using Azure.Core;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using System.Net;
-using System.Reflection.PortableExecutable;
 using System.Text;
-using System.Text.Json;
 using TaskManager.Common.Models;
 using Xunit;
 
@@ -52,42 +47,89 @@ namespace TaskManager.Api.Tests
             return $"Basic {Convert.ToBase64String(
                 Encoding.UTF8.GetBytes($"{username}:{password}"))}";
         }
+        bool EqueUsersDTO(UserDTO oldUser, UserDTO modUser)
+        {
+            if (oldUser.Id != modUser.Id) return false;
+            else if (oldUser.Email != modUser.Email) return false;
+            else if (oldUser.Password != modUser.Password) return false;
+            else if (oldUser.Status != modUser.Status) return false;
+            else if (oldUser.RegistrationDate != modUser.RegistrationDate) return false;
+            else if (oldUser.FirstName != modUser.FirstName) return false;
+            else if (oldUser.LastName != modUser.LastName) return false;
+            else if (oldUser.Phone != modUser.Phone) return false;
+            else if (!oldUser.Photo.SequenceEqual(modUser.Photo)) return false;
+            return true;
+        }
 
         [Fact]
-        public async Task CheckStatus_SendRequest_ShouldOk()
+        public async Task Check_SendRequest_ShouldOk()
         {
+            // Arrange
 
             // Act
-            var response = await client.GetAsync("api/users/check-status");
+            var response = await client.GetAsync("api/users/check");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
+
         [Fact]
-        public async Task Create_SendRequest_ShouldCount1()
+        public async Task Create_SendRequest_ShouldId4()
         {
-            
+            // Arrange
+
 
             // Act
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/account/token");
-            request.Headers.Add("Authorization", adminAuth);
-            var content = new StringContent("", null, "text/plain");
-            request.Content = content;
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var token = JsonSerializer.Deserialize<Token>(await response.Content.ReadAsStringAsync());
+            // Assert
+        }
 
-            request = new HttpRequestMessage(HttpMethod.Get, "api/users/all");
-            request.Headers.Add("Authorization", $"Bearer {token}");
-            response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        [Fact]
+        public async Task Cet_SendRequest_ShouldUserDTOId2()
+        {
+            // Arrange
 
-            var users = JsonSerializer.Deserialize<List<UserDTO>>(await response.Content.ReadAsStringAsync());
-            users.Should().HaveCount(1);
+
+            // Act
+
+
+            // Assert
+        }
+
+        [Fact]
+        public async Task Update_SendRequest_ShouldEqueUsersDTO()
+        {
+            // Arrange
+
+
+            // Act
+
+
+            // Assert
+        }
+
+        [Fact]
+        public async Task Delete_SendRequest_ShouldOk()
+        {
+            // Arrange
+
+
+            // Act
+
+
+            // Assert
+        }
+
+        [Fact]
+        public async Task GetUsers_SendRequest_ShouldCount3()
+        {
+            // Arrange
+
+
+            // Act
+
+
             // Assert
         }
     }

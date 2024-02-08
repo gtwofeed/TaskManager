@@ -11,12 +11,8 @@ namespace ConsoleApp
     {
         static async Task Main(string[] args)
         {
-
-
-            await Temp1();
-
-
-
+            await Temp2();
+            
         }
         static async Task Temp()
         {
@@ -45,6 +41,9 @@ namespace ConsoleApp
             Encoding.UTF8.GetBytes(":")
             );
             Console.WriteLine(uAuth);
+        }
+        static async Task Temp2()
+        {
         }
     }
 }
