@@ -56,6 +56,12 @@ namespace TaskManager.Api.Tests
             ApplicationContext db = webHost.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
 
             List<User> users = [
+                /*new()
+                {
+                    Email = "fistadmin",
+                    Password = "admin",
+                    Status = UserStatus.Admin,
+                },*/
                 new()
                 {
                     Email = "user",
@@ -71,9 +77,13 @@ namespace TaskManager.Api.Tests
 
             db.AddRange(users);
             db.SaveChanges();
-            var client = webHost.CreateClient();
 
+            string adminAuth = GetAuth(UserStatus.Admin, db);
+            string editorAuth = GetAuth(UserStatus.Editor, db);
+            string userAuth = GetAuth(UserStatus.User, db);
+            string IncorrectAuth = GetAuth(UserStatus.User);
 
+            var apiClient = webHost.CreateClient();
 
             var request = new HttpRequestMessage(HttpMethod.Post, "api/account/token");
             request.Headers.Add("Authorization", "Basic ZmlzdGFkbWluOmFkbWlu");
@@ -81,10 +91,23 @@ namespace TaskManager.Api.Tests
             request.Content = content;
 
             // Act
-            var response = await client.SendAsync(request);
+            var response = await apiClient.SendAsync(request);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        string GetAuth(UserStatus status, ApplicationContext? context = null)
+        {
+            string username = "";
+            string password = "";
+            if (context is null) return $"Basic {Convert.ToBase64String(
+                Encoding.UTF8.GetBytes($"{username}:{password}"))}";
+
+            var user = context.Users.FirstOrDefault(u => u.Status == status) ?? context.Users.FirstOrDefault();
+
+            return $"Basic {Convert.ToBase64String(
+                Encoding.UTF8.GetBytes($"{username}:{password}"))}";
         }
     }
 }

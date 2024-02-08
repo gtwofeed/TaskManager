@@ -47,6 +47,12 @@ namespace TaskManager.Api.Tests
             List<User> users = [
                 new()
                 {
+                    Email = "fistadmin",
+                    Password = "admin",
+                    Status = UserStatus.Admin,
+                },
+                new()
+                {
                     Email = "user",
                     Password = "User123",
                     Status = UserStatus.User,
@@ -61,12 +67,12 @@ namespace TaskManager.Api.Tests
             db.AddRange(users);
             db.SaveChanges();
 
-            apiClient = webHost.CreateClient();
-
             adminAuth = GetAuth(UserStatus.Admin, db);
             editorAuth = GetAuth(UserStatus.Editor, db);
             userAuth = GetAuth(UserStatus.User, db);
             IncorrectAuth = GetAuth(UserStatus.User);
+
+            apiClient = webHost.CreateClient();
         }
 
         /// <summary>
