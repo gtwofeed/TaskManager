@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using TaskManager.Api.Models;
 namespace TaskManager.Api
@@ -40,11 +41,19 @@ namespace TaskManager.Api
                 });
 
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+                if(db.Database.IsRelational()) db.Database.Migrate();                
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

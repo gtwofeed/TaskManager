@@ -12,41 +12,8 @@ using Xunit;
 
 namespace TaskManager.Api.Tests
 {
-    public class UsersControllerIntegration : IClassFixture<WebApplicationFactory<Program>>
+    public class UsersControllerIntegration : ComonnContext
     {
-        readonly HttpClient client; // единный контекст для всех тестов
-        readonly string adminAuth; // строка бозовой авторизации админа
-
-
-        public UsersControllerIntegration(WebApplicationFactory<Program> application)
-        {
-            string connection = "Server=(localdb)\\mssqllocaldb;Database=TaskManagerTestDb;Trusted_Connection=True";
-            var webHost = application.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    services.RemoveAll(typeof(DbContextOptions<ApplicationContext>));
-                    services.AddDbContext<ApplicationContext>(option =>
-                    {
-                        option.UseSqlServer(connection);
-                    });
-                });
-            });
-
-            client = webHost.CreateClient();
-
-
-            adminAuth = "Basic ZmlzdGFkbWluOmFkbWlu";
-        }
-
-        string GetAuth(ApplicationContext context, UserStatus status)
-        {
-            string username = "";
-            string password = "";
-            var user = context.Users.FirstOrDefault(u => u.Status == status) ?? context.Users.FirstOrDefault();
-            return $"Basic {Convert.ToBase64String(
-                Encoding.UTF8.GetBytes($"{username}:{password}"))}";
-        }
         bool EqueUsersDTO(UserDTO oldUser, UserDTO modUser)
         {
             if (oldUser.Id != modUser.Id) return false;
@@ -67,7 +34,7 @@ namespace TaskManager.Api.Tests
             // Arrange
 
             // Act
-            var response = await client.GetAsync("api/users/check");
+            var response = await apiClient.GetAsync("api/users/check");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -122,13 +89,12 @@ namespace TaskManager.Api.Tests
         }
 
         [Fact]
-        public async Task GetUsers_SendRequest_ShouldCount3()
+        public async Task GetUsers_SendRequest_ShouldCount1()
         {
             // Arrange
 
 
             // Act
-
 
             // Assert
         }

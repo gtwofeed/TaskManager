@@ -12,10 +12,7 @@ namespace TaskManager.Api
         public DbSet<Desk> Desks { get; set; } = null!;
         public DbSet<Task> Tasks { get; set; } = null!;
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
-        {
-            Database.Migrate();
-        }
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // добовляем админа по умолчанию
@@ -42,7 +39,7 @@ namespace TaskManager.Api
                 .WithMany()
                 .HasForeignKey("ExecutorId");
 
-            
+
         }
     }
 }
