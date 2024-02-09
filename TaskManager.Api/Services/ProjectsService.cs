@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TaskManager.Api.Models;
+﻿using TaskManager.Api.Data;
 using TaskManager.Common.Models;
+using TaskManager.Api.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using TaskManager.Api.Services.Abstractions;
 
 namespace TaskManager.Api.Services
 {
@@ -13,13 +15,10 @@ namespace TaskManager.Api.Services
 
         public IQueryable<ProjectDTO> GetAllProjects() =>
             db.Projects.Select(p => p.ToDTO());
-
         public IQueryable<ProjectDTO> GetForAdminById(int adminId) =>
             db.Projects.Where(p => p.Admin != null && p.Admin.Id == adminId).Select(p => p.ToDTO());
-
         public IQueryable<ProjectDTO> GetForUserById(int userId) =>
             db.Projects.Include(p => p.Users).Where(p => p.Users.Any(u => u.Id == userId)).Select(p => p.ToDTO());
-
         public void AddUsersByIds(int projectId, int[] userIds)
         {
             Project? project = db.Projects.Find(projectId);
@@ -36,7 +35,6 @@ namespace TaskManager.Api.Services
                 db.SaveChanges();
             }
         }
-
         public void DelUsersByIds(int projectId, int[] userIds)
         {
             Project? project = db.Projects.Include(p => p.Users).FirstOrDefault(p => p.Id == projectId);
@@ -115,6 +113,5 @@ namespace TaskManager.Api.Services
             if (dto.Admin is null) return null;
             return db.Users.FirstOrDefault(u => u.Id == dto.Admin.Id);
         }
-
     }
 }

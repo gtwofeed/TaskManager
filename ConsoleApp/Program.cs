@@ -1,18 +1,9 @@
 ﻿
 using System.Text.Json;
-using System;
-using System.Net;
 using TaskManager.Common.Models;
 using System.Text;
-using TaskManager.Api;
-using TaskManager.Api.Models;
 using Task = System.Threading.Tasks.Task;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
+using TaskManager.Api.Data;
 
 namespace ConsoleApp
 {

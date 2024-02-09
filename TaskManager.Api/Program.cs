@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using TaskManager.Api.Models;
-using TaskManager.Common.Models;
+using TaskManager.Api.Data;
+using TaskManager.Api.Data.Models;
+
 namespace TaskManager.Api
 {
     public class Program
@@ -53,7 +53,7 @@ namespace TaskManager.Api
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-                if(db.Database.IsRelational()) db.Database.Migrate();
+                if(db.Database.IsRelational()) db.Database.Migrate();                
             }
 
             // Configure the HTTP request pipeline.

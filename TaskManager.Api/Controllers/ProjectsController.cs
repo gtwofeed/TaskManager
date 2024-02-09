@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TaskManager.Api.Data;
 using TaskManager.Api.Services;
 using TaskManager.Common.Models;
 

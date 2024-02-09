@@ -1,6 +1,6 @@
-﻿using TaskManager.Common.Models;
+﻿using TaskManager.Api.Data.Models.Abstractions;
 
-namespace TaskManager.Api.Models
+namespace TaskManager.Api.Data.Models
 {
     public class Desk : CommonModel
     {

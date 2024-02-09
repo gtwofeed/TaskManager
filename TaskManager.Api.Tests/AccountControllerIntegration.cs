@@ -1,23 +1,11 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
-using TaskManager.Api.Models;
-using TaskManager.Common.Models;
 using Xunit;
+using Task = System.Threading.Tasks.Task;
 
 namespace TaskManager.Api.Tests
 {
-    public class AccountControllerIntegration : ComonnContext
+    public class AccountControllerIntegration : CommonContext
     {
 
         [Fact]

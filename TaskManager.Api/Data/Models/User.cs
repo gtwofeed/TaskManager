@@ -1,6 +1,6 @@
 ﻿using TaskManager.Common.Models;
 
-namespace TaskManager.Api.Models
+namespace TaskManager.Api.Data.Models
 {
     public class User
     {
@@ -32,7 +32,7 @@ namespace TaskManager.Api.Models
 
         public UserDTO ToDTO() =>
             new()
-            { 
+            {
                 Id = Id,
                 FirstName = FirstName,
                 LastName = LastName,

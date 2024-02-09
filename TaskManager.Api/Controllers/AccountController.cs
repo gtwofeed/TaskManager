@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using TaskManager.Api.Models;
+using TaskManager.Api.Data;
+using TaskManager.Api.Data.Models;
 using TaskManager.Api.Services;
 
 namespace TaskManager.Api.Controllers

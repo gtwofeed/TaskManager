@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using TaskManager.Common.Models;
 
-namespace TaskManager.Common.Models
+namespace TaskManager.Api.Data.Models.Abstractions
 {
     public class CommonModel
     {

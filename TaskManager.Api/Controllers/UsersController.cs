@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TaskManager.Api.Data;
 using TaskManager.Api.Services;
 using TaskManager.Common.Models;
 
@@ -49,7 +50,7 @@ namespace TaskManager.Api.Controllers
             return result ? Ok() : NotFound();
         }
 
-        [AllowAnonymous]
+
         [HttpGet]
         public IQueryable<UserDTO> GetUsers() =>
             usersServices.GetAllUsers();

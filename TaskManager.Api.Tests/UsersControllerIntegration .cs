@@ -6,13 +6,13 @@ using Xunit;
 
 namespace TaskManager.Api.Tests
 {
-    public class UsersControllerIntegration : ComonnContext
+    public class UsersControllerIntegration : CommonContext
     {
 
         [Fact]
         public async Task Check_SendRequest_ShouldOk()
         {
-            // Arrange in ComonnContext
+            // Arrange in CommonContext
 
             // Act
             var response = await apiClient.GetAsync("api/users/check");
@@ -25,10 +25,7 @@ namespace TaskManager.Api.Tests
         public async Task Create_SendRequest_ShouldId4()
         {
             // Arrange
-            UserDTO userDTO = new()
-            {
 
-            };
 
             // Act
 
@@ -82,6 +79,7 @@ namespace TaskManager.Api.Tests
 
             // Assert
         }
+
         bool EqueUsersDTO(UserDTO oldUser, UserDTO modUser)
         {
             if (oldUser.Id != modUser.Id) return false;
@@ -95,7 +93,6 @@ namespace TaskManager.Api.Tests
             else if (oldUser.Photo != null && modUser.Photo == null) return false;
             else if (oldUser.Photo == null && modUser.Photo != null) return false;
             else if (oldUser.Photo != null && modUser.Photo != null && !oldUser.Photo.SequenceEqual(modUser.Photo)) return false;
-
             return true;
         }
     }

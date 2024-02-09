@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskManager.Api.Models;
+using TaskManager.Api.Data.Models;
 using TaskManager.Common.Models;
-using Task = TaskManager.Api.Models.Task;
+using Task = TaskManager.Api.Data.Models.Task;
 
-namespace TaskManager.Api
+namespace TaskManager.Api.Data
 {
     public class ApplicationContext : DbContext
     {
@@ -12,7 +12,7 @@ namespace TaskManager.Api
         public DbSet<Desk> Desks { get; set; } = null!;
         public DbSet<Task> Tasks { get; set; } = null!;
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) 
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

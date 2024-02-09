@@ -8,7 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TaskManager.Api.Models;
+using TaskManager.Api.Data;
+using TaskManager.Api.Data.Models;
 using TaskManager.Common.Models;
 
 namespace TaskManager.Api.Tests
@@ -19,7 +20,7 @@ namespace TaskManager.Api.Tests
      * добовляем пользователя со статусом Editor
      * добовляем пользователя со статусом User
      */
-    public abstract class ComonnContext
+    public abstract class CommonContext
     {
         public readonly HttpClient apiClient; // единный контекст для всех тестов
         public readonly string adminAuth; // строка бозовой авторизации админа
@@ -27,7 +28,7 @@ namespace TaskManager.Api.Tests
         public readonly string userAuth; // строка бозовой авторизации пользователя
         public readonly string incorrectAuth; // строка бозовой авторизации не существуещего пользователя
 
-        public ComonnContext()
+        public CommonContext()
         {
             // заменяем провайдера UseInMemoryDatabase
             var webHost = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
@@ -42,7 +43,7 @@ namespace TaskManager.Api.Tests
                 });
             });
 
-            // заполняем Database тестовыми данными
+            #region заполняем Database тестовыми данными
             ApplicationContext db = webHost.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
 
             List<User> users = [
@@ -67,6 +68,7 @@ namespace TaskManager.Api.Tests
 
             db.AddRange(users);
             db.SaveChanges();
+            #endregion
 
             adminAuth = GetAuth(UserStatus.Admin, db);
             editorAuth = GetAuth(UserStatus.Editor, db);

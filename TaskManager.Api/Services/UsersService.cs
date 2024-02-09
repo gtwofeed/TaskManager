@@ -1,7 +1,9 @@
-﻿using System.Security.Claims;
-using System.Text;
-using TaskManager.Api.Models;
+﻿using System.Text;
+using TaskManager.Api.Data;
+using System.Security.Claims;
 using TaskManager.Common.Models;
+using TaskManager.Api.Data.Models;
+using TaskManager.Api.Services.Abstractions;
 
 namespace TaskManager.Api.Services
 {
@@ -49,12 +51,10 @@ namespace TaskManager.Api.Services
             // если пользователя не найдено
             return null;
         }
-
         public User? GetUser(string login, string password) =>
             db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
         public User? GetUser(string login) =>
             db.Users.FirstOrDefault(u => u.Email == login);
-
         public IQueryable<UserDTO> GetAllUsers() =>
             db.Users.Select(u => u.ToDTO());
 
@@ -109,8 +109,7 @@ namespace TaskManager.Api.Services
         }
         #endregion
 
-
-        public IEnumerable<UserDTO> GetByIds(int[] userIds)
+        public IEnumerable<UserDTO?> GetByIds(int[] userIds)
         {
             foreach (int userId in userIds)
             {
