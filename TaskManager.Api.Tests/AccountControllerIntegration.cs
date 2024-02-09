@@ -14,8 +14,6 @@ namespace TaskManager.Api.Tests
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Post, "api/account/token");
             request.Headers.Add("Authorization", incorrectAuth);
-            var content = new StringContent("", null, "text/plain");
-            request.Content = content;
 
             // Act
             var response = await apiClient.SendAsync(request);
@@ -30,8 +28,6 @@ namespace TaskManager.Api.Tests
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Post, "api/account/token");
             request.Headers.Add("Authorization", adminAuth); // "Basic ZmlzdGFkbWluOmFkbWlu"
-            var content = new StringContent("", null, "text/plain");
-            request.Content = content;
 
             // Act
             var response = await apiClient.SendAsync(request);

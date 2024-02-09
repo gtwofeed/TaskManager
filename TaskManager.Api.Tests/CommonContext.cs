@@ -38,7 +38,7 @@ namespace TaskManager.Api.Tests
                     services.RemoveAll(typeof(DbContextOptions<ApplicationContext>));
                     services.AddDbContext<ApplicationContext>(option =>
                     {
-                        option.UseInMemoryDatabase("test");
+                        option.UseInMemoryDatabase("Test");
                     });
                 });
             });
@@ -66,7 +66,7 @@ namespace TaskManager.Api.Tests
                     Status = UserStatus.Editor,
                 }];
 
-            db.AddRange(users);
+            db.Users.AddRange(users);
             db.SaveChanges();
             #endregion
 

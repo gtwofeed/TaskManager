@@ -1,14 +1,26 @@
+using Azure;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
+using System.Text.Json;
+using TaskManager.Api.Data.Models;
+using TaskManager.Api.Data;
 using TaskManager.Common.Models;
 using Xunit;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
+using Task = System.Threading.Tasks.Task;
+
 
 
 namespace TaskManager.Api.Tests
 {
     public class UsersControllerIntegration : CommonContext
     {
-
+        
         [Fact]
         public async Task Check_SendRequest_ShouldOk()
         {
@@ -25,12 +37,26 @@ namespace TaskManager.Api.Tests
         public async Task Create_SendRequest_ShouldId4()
         {
             // Arrange
+            var dto = new UserDTO
+            {
+                Email = "createTest",
+                Password = "CreateTest123",
+                Status = UserStatus.User,
+            };
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/users");
+            request.Headers.Add("Authorization", $"Bearer {await GetToken(adminAuth)}");
 
+            StringContent content = new (JsonSerializer.Serialize(dto), null, "application/json");
+            request.Content = content;
 
             // Act
-
+            var response = await apiClient.SendAsync(request);
 
             // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            responseContent.Should().Be("4");
         }
 
         [Fact]
@@ -78,6 +104,19 @@ namespace TaskManager.Api.Tests
             // Act
 
             // Assert
+        }
+
+        async Task<string?> GetToken(string baseAutString)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/account/token");
+            request.Headers.Add("Authorization", baseAutString); // "Basic ZmlzdGFkbWluOmFkbWlu"
+
+
+            var response = await apiClient.SendAsync(request);
+            string json = await response.Content.ReadAsStringAsync();
+            Token? token = JsonSerializer.Deserialize<Token>(json);
+
+            return token?.ToString();
         }
 
         bool EqueUsersDTO(UserDTO oldUser, UserDTO modUser)
