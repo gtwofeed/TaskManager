@@ -1,26 +1,19 @@
-using Azure;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Text.Json;
-using TaskManager.Api.Data.Models;
-using TaskManager.Api.Data;
 using TaskManager.Common.Models;
 using Xunit;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
 using Task = System.Threading.Tasks.Task;
-
-
 
 namespace TaskManager.Api.Tests
 {
-    public class UsersControllerIntegration : CommonContext
+    public class UsersControllerIntegration : IntegrationTest
     {
-        
+        public UsersControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
+        {
+        }
+
         [Fact]
         public async Task Check_SendRequest_ShouldOk()
         {
@@ -108,7 +101,7 @@ namespace TaskManager.Api.Tests
 
         async Task<string?> GetToken(string baseAutString)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/account/token");
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/account");
             request.Headers.Add("Authorization", baseAutString); // "Basic ZmlzdGFkbWluOmFkbWlu"
 
 

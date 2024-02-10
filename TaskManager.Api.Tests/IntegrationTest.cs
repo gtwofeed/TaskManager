@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using TaskManager.Api.Data;
 using TaskManager.Api.Data.Models;
 using TaskManager.Common.Models;
+using Xunit;
 
 namespace TaskManager.Api.Tests
 {
@@ -20,7 +21,7 @@ namespace TaskManager.Api.Tests
      * добовляем пользователя со статусом Editor
      * добовляем пользователя со статусом User
      */
-    public abstract class CommonContext
+    public abstract class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
     {
         public readonly HttpClient apiClient; // единный контекст для всех тестов
         public readonly string adminAuth; // строка бозовой авторизации админа
@@ -28,23 +29,24 @@ namespace TaskManager.Api.Tests
         public readonly string userAuth; // строка бозовой авторизации пользователя
         public readonly string incorrectAuth; // строка бозовой авторизации не существуещего пользователя
 
-        public CommonContext()
+        public IntegrationTest(WebApplicationFactory<Program> fixture)
         {
             // заменяем провайдера UseInMemoryDatabase
-            var webHost = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+            var builder = fixture.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
+                    Guid idDB = Guid.NewGuid();
                     services.RemoveAll(typeof(DbContextOptions<ApplicationContext>));
                     services.AddDbContext<ApplicationContext>(option =>
                     {
-                        option.UseInMemoryDatabase("Test");
+                        option.UseInMemoryDatabase(idDB.ToString());
                     });
                 });
             });
 
             #region заполняем Database тестовыми данными
-            ApplicationContext db = webHost.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
+            ApplicationContext db = builder.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
 
             List<User> users = [
                 new()
@@ -75,7 +77,7 @@ namespace TaskManager.Api.Tests
             userAuth = GetAuth(UserStatus.User, db);
             incorrectAuth = GetAuth(UserStatus.User);
 
-            apiClient = webHost.CreateClient();
+            apiClient = builder.CreateClient();
         }
 
         /// <summary>

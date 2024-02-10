@@ -23,7 +23,7 @@ namespace TaskManager.Api.Controllers
         public IActionResult Chech() =>
             Ok("OK!");
 
-        [HttpPost("token")]
+        [HttpPost]
         public IActionResult GetToken()
         {
             var userData = userServices.GetUserLoginPassFromBasicAuth(Request);

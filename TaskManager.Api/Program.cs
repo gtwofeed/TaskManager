@@ -57,31 +57,6 @@ namespace TaskManager.Api
             {
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 if(db.Database.IsRelational()) db.Database.Migrate();
-                else
-                {
-                    List<User> users = [
-                        new()
-                        {
-                            Email = "fistadmin",
-                            Password = "admin",
-                            Status = UserStatus.Admin,
-                        },
-                        new()
-                        {
-                            Email = "user",
-                            Password = "User123",
-                            Status = UserStatus.User,
-                        },
-                        new()
-                        {
-                            Email = "editor",
-                            Password = "Editor123",
-                            Status = UserStatus.Editor,
-                        }];
-
-                    db.Users.AddRange(users);
-                    db.SaveChanges();
-                }
             }
 
             // Configure the HTTP request pipeline.
