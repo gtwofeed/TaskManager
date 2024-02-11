@@ -99,7 +99,7 @@ namespace TaskManager.Api.Tests
             return await apiClient.SendAsync(request);
         }
 
-        public async Task<string?> GetBearerToken(string baseAutString)
+        public async Task<string> GetBearerToken(string baseAutString)
         {
             var response = await SendRequestAsync(HttpMethod.Post, "api/account", baseAutString);
 

@@ -21,21 +21,6 @@ namespace TaskManager.Api.Controllers
             projectsServices = new ProjectsService(db);
         }
 
-        [HttpGet]
-        public IQueryable<ProjectDTO>? GetProjects()
-        {
-            var user = usersServices.GetUser(HttpContext.User.Identity.Name);
-            if (user != null)
-            {
-                if (user.Status == UserStatus.Admin)
-                {
-                    return projectsServices.GetAllProjects();
-                }
-                return projectsServices.GetForAdminById(user.Id).Union(projectsServices.GetForUserById(user.Id));
-            }
-            return null;
-        }
-
         [HttpPost]
         public IActionResult Create([FromBody] ProjectDTO dto)
         {
@@ -81,6 +66,21 @@ namespace TaskManager.Api.Controllers
         {
             bool result = projectsServices.Delete(id);
             return result ? Ok() : NotFound();
+        }
+
+        [HttpGet]
+        public IQueryable<ProjectDTO>? GetProjects()
+        {
+            var user = usersServices.GetUser(HttpContext.User.Identity.Name);
+            if (user != null)
+            {
+                if (user.Status == UserStatus.Admin)
+                {
+                    return projectsServices.GetAllProjects();
+                }
+                return projectsServices.GetForAdminById(user.Id).Union(projectsServices.GetForUserById(user.Id));
+            }
+            return null;
         }
 
         [HttpPatch("{id}/users/add")]
