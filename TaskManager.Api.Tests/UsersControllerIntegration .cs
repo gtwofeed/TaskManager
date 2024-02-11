@@ -69,8 +69,8 @@ namespace TaskManager.Api.Tests
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            string json = await response.Content.ReadAsStringAsync();
-            UserDTO? user = JsonSerializer.Deserialize<UserDTO>(json, options);
+            string responseJson = await response.Content.ReadAsStringAsync();
+            UserDTO? user = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
 
             user?.Id.Should().Be(id);
         }
@@ -79,12 +79,50 @@ namespace TaskManager.Api.Tests
         public async Task Update_SendRequest_ShouldEqueUsersDTO()
         {
             // Arrange
+            int id = 2;
+            var dto = new UserDTO();
+            var dtoMod = new UserDTO();
+            string baseToken = await GetBearerToken(adminAuth);
 
+            var requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
+            requestGet.Headers.Add("Authorization", baseToken);
 
-            // Act
+            // Act Get user
+            var response = await apiClient.SendAsync(requestGet);
 
+            // Assert Get user
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            // Assert
+            string responseJson = await response.Content.ReadAsStringAsync();
+            dto = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
+            dto.Should().NotBeNull();
+            dto!.Id.Should().Be(id);
+
+            // Arrange Update user
+            Random random = new Random();
+            dto.Password += random.Next(10).ToString();
+
+            var requestUpdate = new HttpRequestMessage(HttpMethod.Patch, $"api/users/{id}");
+            requestUpdate.Headers.Add("Authorization", baseToken);
+
+            StringContent content = new(JsonSerializer.Serialize(dto), null, "application/json");
+            requestUpdate.Content = content;
+
+            // Act Update user
+            response = await apiClient.SendAsync(requestUpdate);
+
+            // Assert Update user
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
+            requestGet.Headers.Add("Authorization", baseToken);
+
+            response = await apiClient.SendAsync(requestGet);
+
+            responseJson = await response.Content.ReadAsStringAsync();
+            dtoMod = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
+            dtoMod.Should().NotBeNull();
+            dtoMod.Should().Be(dto);
         }
 
         [Fact]
@@ -121,22 +159,6 @@ namespace TaskManager.Api.Tests
             Token? token = JsonSerializer.Deserialize<Token>(json);
 
             return $"Bearer {token?.ToString()}";
-        }
-
-        bool EqueUsersDTO(UserDTO oldUser, UserDTO modUser)
-        {
-            if (oldUser.Id != modUser.Id) return false;
-            else if (oldUser.Email != modUser.Email) return false;
-            else if (oldUser.Password != modUser.Password) return false;
-            else if (oldUser.Status != modUser.Status) return false;
-            else if (oldUser.RegistrationDate != modUser.RegistrationDate) return false;
-            else if (oldUser.FirstName != modUser.FirstName) return false;
-            else if (oldUser.LastName != modUser.LastName) return false;
-            else if (oldUser.Phone != modUser.Phone) return false;
-            else if (oldUser.Photo != null && modUser.Photo == null) return false;
-            else if (oldUser.Photo == null && modUser.Photo != null) return false;
-            else if (oldUser.Photo != null && modUser.Photo != null && !oldUser.Photo.SequenceEqual(modUser.Photo)) return false;
-            return true;
         }
     }
 }
