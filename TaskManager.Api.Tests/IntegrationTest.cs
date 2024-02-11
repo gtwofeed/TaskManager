@@ -86,7 +86,11 @@ namespace TaskManager.Api.Tests
             apiClient = builder.CreateClient();
         }
 
-        public async Task<HttpResponseMessage> SendRequestAsync(HttpMethod metod, string url, string autString, StringContent? content = null)
+        public async Task<HttpResponseMessage> SendRequestAsync(
+            HttpMethod metod,
+            string url,
+            string autString,
+            StringContent? content = null)
         {
             var request = new HttpRequestMessage(metod, url);
             request.Headers.Add("Authorization", autString);
