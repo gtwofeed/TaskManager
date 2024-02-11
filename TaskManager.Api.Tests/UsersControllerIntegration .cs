@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Text.Json;
+using TaskManager.Api.Data.Models;
+using TaskManager.Api.Data;
 using TaskManager.Common.Models;
 using Xunit;
 using Task = System.Threading.Tasks.Task;
@@ -14,6 +16,26 @@ namespace TaskManager.Api.Tests
     {
         public UsersControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
         {
+            #region добавляем в Database тестовые данные
+            List<User> users =
+                [
+                    new()
+                    {
+                        Email = "user",
+                        Password = "User123",
+                        Status = UserStatus.User,
+                    },
+                    new()
+                    {
+                        Email = "editor",
+                        Password = "Editor123",
+                        Status = UserStatus.Editor,
+                    },
+                ];
+
+            db.Users.AddRange(users);
+            db.SaveChanges();
+            #endregion
         }
 
         [Fact]

@@ -29,11 +29,9 @@ namespace TaskManager.Api.Tests
             PropertyNameCaseInsensitive = true
         };
 
+        public readonly ApplicationContext db;
         public readonly HttpClient apiClient; // единный контекст для всех тестов
         public readonly string adminAuth; // строка бозовой авторизации админа
-        public readonly string editorAuth; // строка бозовой авторизации редактора
-        public readonly string userAuth; // строка бозовой авторизации пользователя
-        public readonly string incorrectAuth; // строка бозовой авторизации не существуещего пользователя
 
         public IntegrationTest(WebApplicationFactory<Program> fixture)
         {
@@ -52,36 +50,23 @@ namespace TaskManager.Api.Tests
             });
 
             #region заполняем Database тестовыми данными
-            ApplicationContext db = builder.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
+            db = builder.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
 
-            List<User> users = [
-                new()
-                {
-                    Email = "fistadmin",
-                    Password = "admin",
-                    Status = UserStatus.Admin,
-                },
-                new()
-                {
-                    Email = "user",
-                    Password = "User123",
-                    Status = UserStatus.User,
-                },
-                new()
-                {
-                    Email = "editor",
-                    Password = "Editor123",
-                    Status = UserStatus.Editor,
-                }];
+            List<User> users = 
+                [
+                    new()
+                    {
+                        Email = "fistadmin",
+                        Password = "admin",
+                        Status = UserStatus.Admin,
+                    },
+                ];
 
             db.Users.AddRange(users);
             db.SaveChanges();
             #endregion
 
             adminAuth = GetAuth(UserStatus.Admin, db);
-            editorAuth = GetAuth(UserStatus.Editor, db);
-            userAuth = GetAuth(UserStatus.User, db);
-            incorrectAuth = GetAuth(UserStatus.User);
 
             apiClient = builder.CreateClient();
         }
@@ -116,7 +101,7 @@ namespace TaskManager.Api.Tests
         /// <param name="context"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        string GetAuth(UserStatus status, ApplicationContext? context = null)
+        public string GetAuth(UserStatus status, ApplicationContext? context = null)
         {
             string username = "";
             string password = "";

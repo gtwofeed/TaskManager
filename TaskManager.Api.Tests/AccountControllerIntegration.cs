@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
+using TaskManager.Common.Models;
 using Xunit;
 using Task = System.Threading.Tasks.Task;
 
@@ -8,7 +9,11 @@ namespace TaskManager.Api.Tests
 {
     public class AccountControllerIntegration : IntegrationTest
     {
-        public AccountControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture) { }
+        public readonly string incorrectAuth; // строка бозовой авторизации не существуещего пользователя
+        public AccountControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
+        {
+            incorrectAuth = GetAuth(UserStatus.User);
+        }
 
         [Fact]
         public async Task GetToken_SendRequest_Should_IncorrectLoginPass()

@@ -8,7 +8,14 @@ namespace TaskManager.Api.Tests
 {
     public class ProjectsControllerIntegration : IntegrationTest
     {
-        public ProjectsControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture) { }
+        public readonly string editorAuth; // строка бозовой авторизации редактора
+        public readonly string userAuth; // строка бозовой авторизации пользователя
+        public ProjectsControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
+        {
+
+            editorAuth = GetAuth(UserStatus.Editor, db);
+            userAuth = GetAuth(UserStatus.User, db);
+        }
 
         [Fact]
         public async Task Create__SendRequest_ShouldId2()
