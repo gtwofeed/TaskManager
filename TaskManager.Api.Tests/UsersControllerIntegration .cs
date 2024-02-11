@@ -165,14 +165,22 @@ namespace TaskManager.Api.Tests
         }
 
         [Fact]
-        public async Task GetUsers_SendRequest_ShouldCount1()
+        public async Task GetUsers_SendRequest_ShouldCount3()
         {
             // Arrange
-
+            var request = new HttpRequestMessage(HttpMethod.Get, $"api/users");
+            request.Headers.Add("Authorization", await GetBearerToken(adminAuth));
 
             // Act
+            var response = await apiClient.SendAsync(request);
 
             // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var responseJson = await response.Content.ReadAsStreamAsync();
+            var users = await JsonSerializer.DeserializeAsync<IEnumerable<UserDTO>>(responseJson, options);
+
+            users?.Count().Should().Be(3);
         } 
         
     }
