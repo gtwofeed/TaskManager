@@ -19,8 +19,6 @@ namespace TaskManager.Api.Tests
     /*
      * получаем апи приложение подменяя контекст базы данных на InMemory
      * добовляем пользователя со статусом Admin
-     * добовляем пользователя со статусом Editor
-     * добовляем пользователя со статусом User
      */
     public abstract class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
     {
