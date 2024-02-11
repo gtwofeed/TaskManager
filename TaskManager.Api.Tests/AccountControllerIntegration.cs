@@ -8,19 +8,13 @@ namespace TaskManager.Api.Tests
 {
     public class AccountControllerIntegration : IntegrationTest
     {
-        public AccountControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
-        {
-        }
+        public AccountControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture) { }
 
         [Fact]
         public async Task GetToken_SendRequest_Should_IncorrectLoginPass()
         {
-            // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/account");
-            request.Headers.Add("Authorization", incorrectAuth);
-
             // Act
-            var response = await apiClient.SendAsync(request);
+            var response = await SendRequestAsync(HttpMethod.Post, "api/account", incorrectAuth);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -29,12 +23,8 @@ namespace TaskManager.Api.Tests
         [Fact]
         public async Task GetToken_SendRequest_Should_OK()
         {
-            // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/account");
-            request.Headers.Add("Authorization", adminAuth); // "Basic ZmlzdGFkbWluOmFkbWlu"
-
             // Act
-            var response = await apiClient.SendAsync(request);
+            var response = await SendRequestAsync(HttpMethod.Post, "api/account", adminAuth);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

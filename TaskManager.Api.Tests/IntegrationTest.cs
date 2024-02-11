@@ -86,15 +86,22 @@ namespace TaskManager.Api.Tests
             apiClient = builder.CreateClient();
         }
 
-        public async Task<string> GetBearerToken(string baseAutString)
+        public async Task<HttpResponseMessage> SendRequestAsync(HttpMethod metod, string url, string autString, StringContent? content = null)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/account");
-            request.Headers.Add("Authorization", baseAutString); // "Basic ZmlzdGFkbWluOmFkbWlu"
+            var request = new HttpRequestMessage(metod, url);
+            request.Headers.Add("Authorization", autString);
+            request.Content = content;
 
-            var response = await apiClient.SendAsync(request);
-            string json = await response.Content.ReadAsStringAsync();
-            Token? token = JsonSerializer.Deserialize<Token>(json);
+            return await apiClient.SendAsync(request);
+        }
 
+        public async Task<string?> GetBearerToken(string baseAutString)
+        {
+            var response = await SendRequestAsync(HttpMethod.Post, "api/account", baseAutString);
+
+            var json = await response.Content.ReadAsStringAsync();
+            var token = JsonSerializer.Deserialize<Token>(json);
+            
             return $"Bearer {token?.ToString()}";
         }
 

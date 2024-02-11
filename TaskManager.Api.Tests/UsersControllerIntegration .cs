@@ -38,14 +38,11 @@ namespace TaskManager.Api.Tests
                 Password = "CreateTest123",
                 Status = UserStatus.User,
             };
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/users");
-            request.Headers.Add("Authorization", await GetBearerToken(adminAuth));
 
             StringContent content = new (JsonSerializer.Serialize(dto), null, "application/json");
-            request.Content = content;
 
             // Act
-            var response = await apiClient.SendAsync(request);
+            var response = await SendRequestAsync(HttpMethod.Post, "api/users", await GetBearerToken(adminAuth), content);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -60,11 +57,8 @@ namespace TaskManager.Api.Tests
             // Arrange
             int id = 2;
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
-            request.Headers.Add("Authorization", await GetBearerToken(adminAuth));
-
             // Act
-            var response = await apiClient.SendAsync(request);
+            var response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", await GetBearerToken(adminAuth));
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -81,13 +75,10 @@ namespace TaskManager.Api.Tests
             // Arrange
             int id = 2;
             UserDTO? dto, dtoMod;
-            string baseToken = await GetBearerToken(adminAuth);
-
-            var requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
-            requestGet.Headers.Add("Authorization", baseToken);
+            string bearerToken = await GetBearerToken(adminAuth);
 
             // Act Get user
-            var response = await apiClient.SendAsync(requestGet);
+            var response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", bearerToken);
 
             // Assert Get user
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -101,22 +92,15 @@ namespace TaskManager.Api.Tests
             Random random = new Random();
             dto.Password += random.Next(10).ToString();
 
-            var requestUpdate = new HttpRequestMessage(HttpMethod.Patch, $"api/users/{id}");
-            requestUpdate.Headers.Add("Authorization", baseToken);
-
             StringContent content = new(JsonSerializer.Serialize(dto), null, "application/json");
-            requestUpdate.Content = content;
 
             // Act Update user
-            response = await apiClient.SendAsync(requestUpdate);
+            response = await SendRequestAsync(HttpMethod.Patch, $"api/users/{id}", bearerToken, content);
 
             // Assert Update user
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
-            requestGet.Headers.Add("Authorization", baseToken);
-
-            response = await apiClient.SendAsync(requestGet);
+            response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", bearerToken);
 
             responseJson = await response.Content.ReadAsStringAsync();
             dtoMod = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
@@ -132,11 +116,8 @@ namespace TaskManager.Api.Tests
             string baseToken = await GetBearerToken(adminAuth);
             UserDTO? dto;
 
-            var requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
-            requestGet.Headers.Add("Authorization", baseToken);
-
             // Act Get user
-            var response = await apiClient.SendAsync(requestGet);
+            var response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", baseToken);
 
             // Assert Get user
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -146,20 +127,13 @@ namespace TaskManager.Api.Tests
             dto.Should().NotBeNull();
             dto!.Id.Should().Be(id);
 
-            // Arrange Delete user
-            var requestUpdate = new HttpRequestMessage(HttpMethod.Delete, $"api/users/{id}");
-            requestUpdate.Headers.Add("Authorization", baseToken);
-
             // Act Delete user
-            response = await apiClient.SendAsync(requestUpdate);
+            response = await SendRequestAsync(HttpMethod.Delete, $"api/users/{id}", baseToken);
 
             // Assert Delete user
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
-            requestGet.Headers.Add("Authorization", baseToken);
-
-            response = await apiClient.SendAsync(requestGet);
+            response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", baseToken);
 
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
@@ -167,12 +141,8 @@ namespace TaskManager.Api.Tests
         [Fact]
         public async Task GetUsers_SendRequest_ShouldCount3()
         {
-            // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Get, $"api/users");
-            request.Headers.Add("Authorization", await GetBearerToken(adminAuth));
-
-            // Act
-            var response = await apiClient.SendAsync(request);
+            // Arrange and Act
+            var response = await SendRequestAsync(HttpMethod.Get, $"api/users", await GetBearerToken(adminAuth));
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
