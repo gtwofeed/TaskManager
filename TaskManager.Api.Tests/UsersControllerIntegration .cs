@@ -153,7 +153,6 @@ namespace TaskManager.Api.Tests
             var request = new HttpRequestMessage(HttpMethod.Post, "api/account");
             request.Headers.Add("Authorization", baseAutString); // "Basic ZmlzdGFkbWluOmFkbWlu"
 
-
             var response = await apiClient.SendAsync(request);
             string json = await response.Content.ReadAsStringAsync();
             Token? token = JsonSerializer.Deserialize<Token>(json);
