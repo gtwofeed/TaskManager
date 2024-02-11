@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Common.Models",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Api.Tests", "TaskManager.Api.Tests\TaskManager.Api.Tests.csproj", "{17C04850-6AEC-4A1E-988E-21FDE20805EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{B08DBD9A-A1BB-43E4-99FE-4267B684A168}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{17C04850-6AEC-4A1E-988E-21FDE20805EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17C04850-6AEC-4A1E-988E-21FDE20805EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17C04850-6AEC-4A1E-988E-21FDE20805EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B08DBD9A-A1BB-43E4-99FE-4267B684A168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08DBD9A-A1BB-43E4-99FE-4267B684A168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08DBD9A-A1BB-43E4-99FE-4267B684A168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08DBD9A-A1BB-43E4-99FE-4267B684A168}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

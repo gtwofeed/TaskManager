@@ -11,8 +11,6 @@ namespace TaskManager.Api.Tests
     {
         [JsonPropertyName("access_token")]
         public string? AccessTokenen { get; set; }
-
-        [JsonPropertyName("username")]
         public string? UserName { get; set; }
 
         public override string ToString() =>

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TaskManager.Api.Data;
 using TaskManager.Api.Data.Models;
@@ -23,6 +24,11 @@ namespace TaskManager.Api.Tests
      */
     public abstract class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
     {
+        public readonly JsonSerializerOptions options = new ()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
         public readonly HttpClient apiClient; // единный контекст для всех тестов
         public readonly string adminAuth; // строка бозовой авторизации админа
         public readonly string editorAuth; // строка бозовой авторизации редактора

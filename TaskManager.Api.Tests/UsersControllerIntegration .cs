@@ -1,5 +1,7 @@
+using Azure.Core;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Text.Json;
 using TaskManager.Common.Models;
@@ -37,7 +39,7 @@ namespace TaskManager.Api.Tests
                 Status = UserStatus.User,
             };
             var request = new HttpRequestMessage(HttpMethod.Post, "api/users");
-            request.Headers.Add("Authorization", $"Bearer {await GetToken(adminAuth)}");
+            request.Headers.Add("Authorization", await GetBearerToken(adminAuth));
 
             StringContent content = new (JsonSerializer.Serialize(dto), null, "application/json");
             request.Content = content;
@@ -56,12 +58,21 @@ namespace TaskManager.Api.Tests
         public async Task Cet_SendRequest_ShouldUserDTOId2()
         {
             // Arrange
+            int id = 2;
 
+            var request = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
+            request.Headers.Add("Authorization", await GetBearerToken(adminAuth));
 
             // Act
-
+            var response = await apiClient.SendAsync(request);
 
             // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            string json = await response.Content.ReadAsStringAsync();
+            UserDTO? user = JsonSerializer.Deserialize<UserDTO>(json, options);
+
+            user?.Id.Should().Be(id);
         }
 
         [Fact]
@@ -99,7 +110,7 @@ namespace TaskManager.Api.Tests
             // Assert
         }
 
-        async Task<string?> GetToken(string baseAutString)
+        async Task<string> GetBearerToken(string baseAutString)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "api/account");
             request.Headers.Add("Authorization", baseAutString); // "Basic ZmlzdGFkbWluOmFkbWlu"
@@ -109,7 +120,7 @@ namespace TaskManager.Api.Tests
             string json = await response.Content.ReadAsStringAsync();
             Token? token = JsonSerializer.Deserialize<Token>(json);
 
-            return token?.ToString();
+            return $"Bearer {token?.ToString()}";
         }
 
         bool EqueUsersDTO(UserDTO oldUser, UserDTO modUser)
