@@ -80,8 +80,7 @@ namespace TaskManager.Api.Tests
         {
             // Arrange
             int id = 2;
-            var dto = new UserDTO();
-            var dtoMod = new UserDTO();
+            UserDTO? dto, dtoMod;
             string baseToken = await GetBearerToken(adminAuth);
 
             var requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
@@ -129,12 +128,40 @@ namespace TaskManager.Api.Tests
         public async Task Delete_SendRequest_ShouldOk()
         {
             // Arrange
+            int id = 2;
+            string baseToken = await GetBearerToken(adminAuth);
+            UserDTO? dto;
 
+            var requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
+            requestGet.Headers.Add("Authorization", baseToken);
 
-            // Act
+            // Act Get user
+            var response = await apiClient.SendAsync(requestGet);
 
+            // Assert Get user
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            // Assert
+            string responseJson = await response.Content.ReadAsStringAsync();
+            dto = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
+            dto.Should().NotBeNull();
+            dto!.Id.Should().Be(id);
+
+            // Arrange Delete user
+            var requestUpdate = new HttpRequestMessage(HttpMethod.Delete, $"api/users/{id}");
+            requestUpdate.Headers.Add("Authorization", baseToken);
+
+            // Act Delete user
+            response = await apiClient.SendAsync(requestUpdate);
+
+            // Assert Delete user
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            requestGet = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
+            requestGet.Headers.Add("Authorization", baseToken);
+
+            response = await apiClient.SendAsync(requestGet);
+
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
 
         [Fact]
@@ -146,18 +173,7 @@ namespace TaskManager.Api.Tests
             // Act
 
             // Assert
-        }
-
-        async Task<string> GetBearerToken(string baseAutString)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/account");
-            request.Headers.Add("Authorization", baseAutString); // "Basic ZmlzdGFkbWluOmFkbWlu"
-
-            var response = await apiClient.SendAsync(request);
-            string json = await response.Content.ReadAsStringAsync();
-            Token? token = JsonSerializer.Deserialize<Token>(json);
-
-            return $"Bearer {token?.ToString()}";
-        }
+        } 
+        
     }
 }

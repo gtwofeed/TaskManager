@@ -40,14 +40,14 @@ namespace TaskManager.Api.Controllers
         public IActionResult Update(int id, [FromBody] UserDTO dto)
         {
             bool result = usersServices.Update(dto, id);
-            return result ? Ok() : NotFound();
+            return result ? Ok() : NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             bool result = usersServices.Delete(id);
-            return result ? Ok() : NotFound();
+            return result ? Ok() : NoContent();
         }
 
 

@@ -86,6 +86,18 @@ namespace TaskManager.Api.Tests
             apiClient = builder.CreateClient();
         }
 
+        public async Task<string> GetBearerToken(string baseAutString)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/account");
+            request.Headers.Add("Authorization", baseAutString); // "Basic ZmlzdGFkbWluOmFkbWlu"
+
+            var response = await apiClient.SendAsync(request);
+            string json = await response.Content.ReadAsStringAsync();
+            Token? token = JsonSerializer.Deserialize<Token>(json);
+
+            return $"Bearer {token?.ToString()}";
+        }
+
         /// <summary>
         /// получение строки базовай авторизации для пользователя определённого статуса 
         /// из предоставленного кондекста базы данных
