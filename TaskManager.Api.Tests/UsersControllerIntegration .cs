@@ -1,11 +1,8 @@
-using Azure.Core;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Options;
 using System.Net;
 using System.Text.Json;
 using TaskManager.Api.Data.Models;
-using TaskManager.Api.Data;
 using TaskManager.Common.Models;
 using Xunit;
 using Task = System.Threading.Tasks.Task;
