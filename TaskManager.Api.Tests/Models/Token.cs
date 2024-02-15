@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TaskManager.Api.Tests
+namespace TaskManager.Api.Tests.Models
 {
     public class Token
     {

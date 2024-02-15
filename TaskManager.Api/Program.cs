@@ -19,7 +19,6 @@ namespace TaskManager.Api
 
             // добавляем контекст ApplicationContext в качестве сервиса в приложение
             builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
-            //builder.Services.AddDbContext<ApplicationContext>(option => option.UseInMemoryDatabase("test"));
 
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

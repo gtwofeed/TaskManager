@@ -7,10 +7,11 @@ using System.Text;
 using System.Text.Json;
 using TaskManager.Api.Data;
 using TaskManager.Api.Data.Models;
+using TaskManager.Api.Tests.Models;
 using TaskManager.Common.Models;
 using Xunit;
 
-namespace TaskManager.Api.Tests
+namespace TaskManager.Api.Tests.Abstractions
 {
     /*
      * получаем апи приложение подменяя контекст базы данных на InMemory
@@ -18,14 +19,22 @@ namespace TaskManager.Api.Tests
      */
     public abstract class IntegrationTestsBase : IClassFixture<WebApplicationFactory<Program>>
     {
-        public readonly JsonSerializerOptions options = new ()
+        public JsonSerializerOptions JsonSerializerOptions { get; } = new()
         {
             PropertyNameCaseInsensitive = true
         };
 
-        public readonly ApplicationContext db;
-        public readonly HttpClient apiClient; // единный контекст для всех тестов
-        public readonly string adminAuth; // строка бозовой авторизации админа
+        public ApplicationContext DB { get; }
+
+        /// <summary>
+        /// единный контекст для всех тестов
+        /// </summary>
+        public HttpClient ApiClient { get; }
+
+        /// <summary>
+        /// строка бозовой авторизации админа
+        /// </summary>
+        public string AdminAuth { get; }
 
         public IntegrationTestsBase(WebApplicationFactory<Program> fixture)
         {
@@ -44,9 +53,9 @@ namespace TaskManager.Api.Tests
             });
 
             #region заполняем Database тестовыми данными
-            db = builder.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
+            DB = builder.Services.CreateScope().ServiceProvider.GetService<ApplicationContext>()!;
 
-            List<User> users = 
+            List<User> users =
                 [
                     new()
                     {
@@ -56,13 +65,13 @@ namespace TaskManager.Api.Tests
                     },
                 ];
 
-            db.Users.AddRange(users);
-            db.SaveChanges();
+            DB.Users.AddRange(users);
+            DB.SaveChanges();
             #endregion
 
-            adminAuth = GetAuth(UserStatus.Admin, db);
+            AdminAuth = GetAuth(UserStatus.Admin, DB);
 
-            apiClient = builder.CreateClient();
+            ApiClient = builder.CreateClient();
         }
 
         public async Task<HttpResponseMessage> SendRequestAsync(
@@ -75,7 +84,7 @@ namespace TaskManager.Api.Tests
             request.Headers.Add("Authorization", autString);
             request.Content = content;
 
-            return await apiClient.SendAsync(request);
+            return await ApiClient.SendAsync(request);
         }
 
         public async Task<string> GetBearerToken(string baseAutString)
@@ -84,7 +93,7 @@ namespace TaskManager.Api.Tests
 
             var json = await response.Content.ReadAsStringAsync();
             var token = JsonSerializer.Deserialize<Token>(json);
-            
+
             return $"Bearer {token?.ToString()}";
         }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Text.Json;
 using TaskManager.Api.Data.Models;
+using TaskManager.Api.Tests.Abstractions;
 using TaskManager.Common.Models;
 using Xunit;
 using Task = System.Threading.Tasks.Task;
@@ -30,8 +31,8 @@ namespace TaskManager.Api.Tests
                     },
                 ];
 
-            db.Users.AddRange(users);
-            db.SaveChanges();
+            DB.Users.AddRange(users);
+            DB.SaveChanges();
             #endregion
         }
 
@@ -41,7 +42,7 @@ namespace TaskManager.Api.Tests
             // Arrange in CommonContext
 
             // Act
-            var response = await apiClient.GetAsync("api/users/check");
+            var response = await ApiClient.GetAsync("api/users/check");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -61,7 +62,7 @@ namespace TaskManager.Api.Tests
             StringContent content = new (JsonSerializer.Serialize(dto), null, "application/json");
 
             // Act
-            var response = await SendRequestAsync(HttpMethod.Post, "api/users", await GetBearerToken(adminAuth), content);
+            var response = await SendRequestAsync(HttpMethod.Post, "api/users", await GetBearerToken(AdminAuth), content);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -77,13 +78,13 @@ namespace TaskManager.Api.Tests
             int id = 2;
 
             // Act
-            var response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", await GetBearerToken(adminAuth));
+            var response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", await GetBearerToken(AdminAuth));
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             string responseJson = await response.Content.ReadAsStringAsync();
-            UserDTO? user = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
+            UserDTO? user = JsonSerializer.Deserialize<UserDTO>(responseJson, JsonSerializerOptions);
 
             user?.Id.Should().Be(id);
         }
@@ -94,7 +95,7 @@ namespace TaskManager.Api.Tests
             // Arrange
             int id = 2;
             UserDTO? dto, dtoMod;
-            string bearerToken = await GetBearerToken(adminAuth);
+            string bearerToken = await GetBearerToken(AdminAuth);
 
             // Act Get user
             var response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", bearerToken);
@@ -103,7 +104,7 @@ namespace TaskManager.Api.Tests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             string responseJson = await response.Content.ReadAsStringAsync();
-            dto = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
+            dto = JsonSerializer.Deserialize<UserDTO>(responseJson, JsonSerializerOptions);
             dto.Should().NotBeNull();
             dto!.Id.Should().Be(id);
 
@@ -122,7 +123,7 @@ namespace TaskManager.Api.Tests
             response = await SendRequestAsync(HttpMethod.Get, $"api/users/{id}", bearerToken);
 
             responseJson = await response.Content.ReadAsStringAsync();
-            dtoMod = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
+            dtoMod = JsonSerializer.Deserialize<UserDTO>(responseJson, JsonSerializerOptions);
             dtoMod.Should().NotBeNull();
             dtoMod.Should().Be(dto);
         }
@@ -132,7 +133,7 @@ namespace TaskManager.Api.Tests
         {
             // Arrange
             int id = 2;
-            string baseToken = await GetBearerToken(adminAuth);
+            string baseToken = await GetBearerToken(AdminAuth);
             UserDTO? dto;
 
             // Act Get user
@@ -142,7 +143,7 @@ namespace TaskManager.Api.Tests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             string responseJson = await response.Content.ReadAsStringAsync();
-            dto = JsonSerializer.Deserialize<UserDTO>(responseJson, options);
+            dto = JsonSerializer.Deserialize<UserDTO>(responseJson, JsonSerializerOptions);
             dto.Should().NotBeNull();
             dto!.Id.Should().Be(id);
 
@@ -161,13 +162,13 @@ namespace TaskManager.Api.Tests
         public async Task GetUsers_SendRequest_ShouldCount3()
         {
             // Arrange and Act
-            var response = await SendRequestAsync(HttpMethod.Get, $"api/users", await GetBearerToken(adminAuth));
+            var response = await SendRequestAsync(HttpMethod.Get, $"api/users", await GetBearerToken(AdminAuth));
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var responseJson = await response.Content.ReadAsStreamAsync();
-            var users = await JsonSerializer.DeserializeAsync<IEnumerable<UserDTO>>(responseJson, options);
+            var users = await JsonSerializer.DeserializeAsync<IEnumerable<UserDTO>>(responseJson, JsonSerializerOptions);
 
             users?.Count().Should().Be(3);
         } 

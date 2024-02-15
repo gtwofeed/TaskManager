@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using TaskManager.Api.Tests.Abstractions;
 using TaskManager.Common.Models;
 using Xunit;
 
@@ -11,8 +12,8 @@ namespace TaskManager.Api.Tests
         public ProjectsControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
         {
 
-            editorAuth = GetAuth(UserStatus.Editor, db);
-            userAuth = GetAuth(UserStatus.User, db);
+            editorAuth = GetAuth(UserStatus.Editor, DB);
+            userAuth = GetAuth(UserStatus.User, DB);
         }
 
         [Fact]

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
+using TaskManager.Api.Tests.Abstractions;
 using TaskManager.Common.Models;
 using Xunit;
 using Task = System.Threading.Tasks.Task;
@@ -29,7 +30,7 @@ namespace TaskManager.Api.Tests
         public async Task GetToken_SendRequest_Should_OK()
         {
             // Act
-            var response = await SendRequestAsync(HttpMethod.Post, "api/account", adminAuth);
+            var response = await SendRequestAsync(HttpMethod.Post, "api/account", AdminAuth);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
