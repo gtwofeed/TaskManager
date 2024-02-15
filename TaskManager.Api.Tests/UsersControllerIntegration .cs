@@ -12,11 +12,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace TaskManager.Api.Tests
 {
-    public class UsersControllerIntegration : IntegrationTest
+    public class UsersControllerIntegrationTests : IntegrationTestsBase
     {
-        public UsersControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
+        public UsersControllerIntegrationTests(WebApplicationFactory<Program> fixture) : base(fixture)
         {
-            #region добавляем в Database тестовые данные
+            #region adding test data to the Database
             List<User> users =
                 [
                     new()

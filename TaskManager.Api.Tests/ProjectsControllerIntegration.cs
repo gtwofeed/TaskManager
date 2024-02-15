@@ -6,7 +6,7 @@ using Xunit;
 
 namespace TaskManager.Api.Tests
 {
-    public class ProjectsControllerIntegration : IntegrationTest
+    public class ProjectsControllerIntegration : IntegrationTestsBase
     {
         public readonly string editorAuth; // строка бозовой авторизации редактора
         public readonly string userAuth; // строка бозовой авторизации пользователя

@@ -7,10 +7,10 @@ using Task = System.Threading.Tasks.Task;
 
 namespace TaskManager.Api.Tests
 {
-    public class AccountControllerIntegration : IntegrationTest
+    public class AccountControllerIntegrationTests : IntegrationTestsBase
     {
-        public readonly string incorrectAuth; // строка бозовой авторизации не существуещего пользователя
-        public AccountControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
+        readonly string incorrectAuth; // строка бозовой авторизации не существуещего пользователя
+        public AccountControllerIntegrationTests(WebApplicationFactory<Program> fixture) : base(fixture)
         {
             incorrectAuth = GetAuth(UserStatus.User);
         }

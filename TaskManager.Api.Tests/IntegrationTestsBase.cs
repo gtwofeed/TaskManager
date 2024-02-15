@@ -20,7 +20,7 @@ namespace TaskManager.Api.Tests
      * получаем апи приложение подменяя контекст базы данных на InMemory
      * добовляем пользователя со статусом Admin
      */
-    public abstract class IntegrationTest : IClassFixture<WebApplicationFactory<Program>>
+    public abstract class IntegrationTestsBase : IClassFixture<WebApplicationFactory<Program>>
     {
         public readonly JsonSerializerOptions options = new ()
         {
@@ -31,7 +31,7 @@ namespace TaskManager.Api.Tests
         public readonly HttpClient apiClient; // единный контекст для всех тестов
         public readonly string adminAuth; // строка бозовой авторизации админа
 
-        public IntegrationTest(WebApplicationFactory<Program> fixture)
+        public IntegrationTestsBase(WebApplicationFactory<Program> fixture)
         {
             // заменяем провайдера UseInMemoryDatabase
             var builder = fixture.WithWebHostBuilder(builder =>
