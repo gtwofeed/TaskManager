@@ -14,7 +14,6 @@ namespace TaskManager.Api.Tests
     {
         public UsersControllerIntegrationTests(WebApplicationFactory<Program> fixture) : base(fixture)
         {
-            #region adding test data to the Database
             List<User> users =
                 [
                     new()
@@ -33,7 +32,6 @@ namespace TaskManager.Api.Tests
 
             DB.Users.AddRange(users);
             DB.SaveChanges();
-            #endregion
         }
 
         [Fact]
