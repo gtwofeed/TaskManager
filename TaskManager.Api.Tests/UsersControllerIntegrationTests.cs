@@ -40,7 +40,7 @@ namespace TaskManager.Api.Tests
             // Arrange in CommonContext
 
             // Act
-            var response = await ApiClient.GetAsync("api/users/check");
+            var response = await SendRequestAsync(HttpMethod.Get, $"api/users/check", await GetBearerToken(AdminAuth));
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
