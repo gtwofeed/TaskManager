@@ -5,11 +5,11 @@ using Xunit;
 
 namespace TaskManager.Api.Tests
 {
-    public class ProjectsControllerIntegration : IntegrationTestsBase
+    public class ProjectsControllerIntegrationTests : IntegrationTestsBase
     {
         public readonly string editorAuth; // строка бозовой авторизации редактора
         public readonly string userAuth; // строка бозовой авторизации пользователя
-        public ProjectsControllerIntegration(WebApplicationFactory<Program> fixture) : base(fixture)
+        public ProjectsControllerIntegrationTests(WebApplicationFactory<Program> fixture) : base(fixture)
         {
 
             editorAuth = GetAuth(UserStatus.Editor, DB);
