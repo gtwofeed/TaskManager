@@ -17,7 +17,6 @@ namespace TaskManager.Api.Controllers
         public UsersController(ApplicationContext db) =>
             usersServices = new(db);
 
-        [AllowAnonymous]
         [HttpGet("check")]
         public IActionResult Check() =>
             Ok($"Ok");

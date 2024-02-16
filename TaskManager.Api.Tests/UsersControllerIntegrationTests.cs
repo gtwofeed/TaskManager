@@ -14,7 +14,6 @@ namespace TaskManager.Api.Tests
     {
         public UsersControllerIntegrationTests(WebApplicationFactory<Program> fixture) : base(fixture)
         {
-            #region adding test data to the Database
             List<User> users =
                 [
                     new()
@@ -33,7 +32,6 @@ namespace TaskManager.Api.Tests
 
             DB.Users.AddRange(users);
             DB.SaveChanges();
-            #endregion
         }
 
         [Fact]
@@ -42,7 +40,7 @@ namespace TaskManager.Api.Tests
             // Arrange in CommonContext
 
             // Act
-            var response = await ApiClient.GetAsync("api/users/check");
+            var response = await SendRequestAsync(HttpMethod.Get, $"api/users/check", await GetBearerToken(AdminAuth));
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

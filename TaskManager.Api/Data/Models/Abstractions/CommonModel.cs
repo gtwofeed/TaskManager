@@ -12,11 +12,10 @@ namespace TaskManager.Api.Data.Models.Abstractions
 
         public CommonModel() =>
             CreatedDate = DateTime.Now;
-        public CommonModel(CommonDTO dto)
+        public CommonModel(CommonDTO dto) : this()
         {
             Name = dto.Name;
             Description = dto.Description;
-            CreatedDate = dto.CreatedDate;
             Photo = dto.Photo;
         }
     }
